@@ -8,12 +8,15 @@ define
       if Valor \= Esperado then
          % show: con endline. print: sin endline. 
          % printInfo/showInfo -> sólo strings (no muestran bien las listas)
-	 {System.showInfo 'Fallo en prueba: '#Descripcion}
-	 {System.printInfo '  Se esperaba: '} {System.show Esperado}
-	 {System.printInfo '  Pero se obtuvo: '} {System.show Valor}
+         {System.showInfo 'Fallo en prueba: '#Descripcion}
+         {System.printInfo '  Se esperaba: '} 
+         {System.show Esperado}
+         {System.printInfo '  Pero se obtuvo: '} 
+         {System.show Valor}
       end      
    end
    
+   % Pruebas del módulo
    L = [1 2 3 2 1]
    
    {Iguales {Lista.longitud L} 5 'Longitud de lista'}
