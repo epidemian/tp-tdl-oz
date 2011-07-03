@@ -11,6 +11,9 @@ define
    E = estado(principal:[a b] uno:nil dos:nil)
    {P.iguales {Trenes.aplicarMovimientos E nil} [E] 
               'AplicarMovimientos sin movimientos'}
+
+   {P.iguales {Trenes.aplicarMovimientos E [uno(0) dos(0)]} [E E E] 
+              'AplicarMovimientos con movimientos de 0 vagones'}
    
    {P.iguales {Trenes.aplicarMovimientos E [uno(1) dos(1) uno(~1)]}
                [estado(principal:[a b] uno:nil dos:nil)
@@ -28,6 +31,14 @@ define
                'AplicarMovimientos: los vagones deben agregarse al comienzo de'#
                ' las vías secundarias y al final de la principal'}
 
+   {P.iguales {Trenes.partirTren [a b c] a} nil#[b c] 
+              'PartirTren por el primer vagón'}
+              
+   {P.iguales {Trenes.partirTren [a b c d] c} [a b]#[d] 
+              'PartirTren por vagón intermedio'}
+   
+   {P.iguales {Trenes.partirTren [a b c] c} [a b]#nil 
+              'PartirTren por el último vagón'}
    {P.finalizar}
    {Application.exit 0}
 end

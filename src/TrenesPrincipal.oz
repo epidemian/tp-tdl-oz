@@ -1,9 +1,12 @@
 functor
 import
+   Trenes
    Visualizador
 define
-   {Visualizador.visualizar [estado(principal:[a b c d] uno:nil dos:nil)
-                             estado(principal:[a b] uno:[c d] dos:nil)
-                             estado(principal:[a] uno:[c d] dos:[b])
-                             estado(principal:[a c d] uno:nil dos:[b])]}
+   Inicial = [a b c]
+   Final = [b a c]
+   Ms = {Trenes.calcularMovimientos Inicial Final}
+   Estados = {Trenes.aplicarMovimientos estado(principal:Inicial uno:nil dos:nil)
+                                        Ms}
+   {Visualizador.visualizar Estados}
 end

@@ -27,8 +27,8 @@ define
    {P.iguales {Lista.miembro L 0} false 'Miembro: elemento no pertence'}
    {P.iguales {Lista.miembro nil 3} false 'Miembro: lista vacía'}
    
-   {P.iguales {Lista.posicion L 1} 0 'Posición de primer elemento es 0'}
-   {P.iguales {Lista.posicion L 3} 2 'Posición de tercer elemento es 2'}
+   {P.iguales {Lista.posicion L 1} 1 'Posición de primer elemento es 1'}
+   {P.iguales {Lista.posicion L 3} 3 'Posición de tercer elemento es 3'}
 
    {P.finalizar}
    {Application.exit 0}

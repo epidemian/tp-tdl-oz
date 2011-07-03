@@ -45,11 +45,11 @@ define
       [] X|Xr then X == Y orelse {Miembro Xr Y} end
    end
 
-   % Devuelve la posición de Y en la lista Xs siendo la primer posición la 0.
+   % Devuelve la posición de Y en la lista Xs siendo la primer posición la 1.
    fun {Posicion Xs Y}
       case Xs of nil then raise elementoNoPertenece(Y Xs) end
       [] X|Xr then
-         if Y == X then 0 else 1 + {Posicion Xr Y} end
+         if Y == X then 1 else 1 + {Posicion Xr Y} end
       end
    end
 end
