@@ -39,6 +39,28 @@ define
    
    {P.iguales {Trenes.partirTren [a b c] c} [a b]#nil 
               'PartirTren por el último vagón'}
+              
+   {P.iguales {Trenes.calcularMovimientos [a b c] [a b c]} nil
+              'CalcularMovimientos: no se necesita ningún movimiento para '#
+              'transformar un tren en sí mismo'}
+
+   {P.iguales {Trenes.calcularMovimientos [a b c] [b a c]} 
+              [uno(2) dos(1) uno(~1) dos(~1) uno(~1)]
+              'CalcularMovimientos'}
+
+   {P.iguales {Trenes.calcularMovimientos [a b c] [b c a]} 
+              [uno(2) dos(1) uno(~2) dos(~1)]
+              'CalcularMovimientos'}
+
+   Inicial = [a b c d e f g]
+   Final = [c f a e g b d]
+   Ms = {Trenes.calcularMovimientos Inicial Final} 
+   Es = {Trenes.aplicarMovimientos estado(principal:Inicial uno:nil dos:nil) Ms}
+   {P.iguales {Nth Es {Length Es}}
+              estado(principal:Final uno:nil dos:nil)
+              'CalcularMovimientos: los movimientos caculados, al ser '#
+              'aplicados al estado inicial, dan el estado final esperado'}
+   
    {P.finalizar}
    {Application.exit 0}
 end
