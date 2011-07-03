@@ -7,7 +7,7 @@ export
    Miembro
    Posicion
 define
-   % Devuelve la longitud de la lista Xs
+   % Devuelve la longitud de la lista Xs.
    fun {Longitud Xs}
       case Xs of nil then 0
       [] _|Xr then 1 + {Longitud Xr}
@@ -32,14 +32,14 @@ define
       end
    end
 
-   % Devuelve la lista que resulta de concatenar Xs y Ys
+   % Devuelve la lista que resulta de concatenar Xs y Ys.
    fun {Agregar Xs Ys}
       case Xs of nil then Ys
       [] X|Xr then X|{Agregar Xr Ys}
       end
    end
 
-   % Verifica si Y pertenece a la lista Xs
+   % Verifica si Y pertenece a la lista Xs.
    fun {Miembro Xs Y}
       case Xs of nil then false
       [] X|Xr then X == Y orelse {Miembro Xr Y} end
