@@ -10,7 +10,7 @@ define
    % Devuelve la longitud de la lista Xs
    fun {Longitud Xs}
       case Xs of nil then 0
-      [] _|T then 1 + {Longitud T}
+      [] _|Xr then 1 + {Longitud Xr}
       end
    end
 
@@ -18,8 +18,8 @@ define
    % lista Xs.
    fun {Tomar Xs N}
       case Xs of nil then nil
-      [] H|T then
-	 if N == 0 then nil else H|{Tomar T N-1} end
+      [] X|Xr then
+         if N == 0 then nil else X|{Tomar Xr N-1} end
       end
    end
 
@@ -27,29 +27,29 @@ define
    % {Min N {Longitud Xs}} elementos de la lista Xs.
    fun {Eliminar Xs N}
       case Xs of nil then nil
-      [] _|T then
-	 if N == 0 then Xs else {Eliminar T N-1} end
+      [] _|Xr then
+         if N == 0 then Xs else {Eliminar Xr N-1} end
       end
    end
 
    % Devuelve la lista que resulta de concatenar Xs y Ys
    fun {Agregar Xs Ys}
       case Xs of nil then Ys
-      [] H|T then H|{Agregar T Ys}
+      [] X|Xr then X|{Agregar Xr Ys}
       end
    end
 
    % Verifica si Y pertenece a la lista Xs
    fun {Miembro Xs Y}
       case Xs of nil then false
-      [] H|T then H == Y orelse {Miembro T Y} end
+      [] X|Xr then X == Y orelse {Miembro Xr Y} end
    end
 
    % Devuelve la posición de Y en la lista Xs siendo la primer posición la 0.
    fun {Posicion Xs Y}
       case Xs of nil then raise elementoNoPertenece(Y Xs) end
-      [] H|T then
-	 if Y == H then 0 else 1 + {Posicion T Y} end
+      [] X|Xr then
+         if Y == X then 0 else 1 + {Posicion Xr Y} end
       end
    end
 end

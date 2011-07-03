@@ -16,7 +16,7 @@ define
       end      
    end
    
-   % Pruebas del módulo
+   % Pruebas del módulo Lista.
    L = [1 2 3 2 1]
    
    {Iguales {Lista.longitud L} 5 'Longitud de lista'}
