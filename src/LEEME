@@ -6,3 +6,4 @@ $ ozengine TrenesPrincipal.ozf
 
 Para ejecutar las pruebas:
 $ ozengine PruebasLista.ozf
+$ ozengine PruebasTrenes.ozf
