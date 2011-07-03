@@ -1,3 +1,3 @@
 makefile(
-    lib : ['Lista.ozf' 'PruebasLista.ozf' 'Visualizador.ozf' 'TrenesMain.ozf']
+    lib : ['Lista.ozf' 'PruebasLista.ozf' 'Visualizador.ozf' 'TrenesPrincipal.ozf']
 )

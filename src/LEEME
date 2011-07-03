@@ -1,0 +1,8 @@
+Para compilar:
+$ ozmake
+
+Para ejecutar el programa principal:
+$ ozengine TrenesPrincipal.ozf
+
+Para ejecutar las pruebas:
+$ ozengine PruebasLista.ozf
