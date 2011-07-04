@@ -1,0 +1,324 @@
+% Tamaño de letra.
+\documentclass[12pt,titlepage]{article}
+%\documentclass{article}
+
+%------------------------------ Paquetes ----------------------------------
+
+% Paquetes:
+
+%Para comentarios multilínea.
+\usepackage{verbatim}
+
+% Para tener cabecera y pie de página con un estilo personalizado.
+\usepackage{fancyhdr}
+
+% Codificación UTF-8
+\usepackage[utf8]{inputenc}
+
+% Tipografía
+\usepackage{palatino} % Esta es genial!
+\linespread{1.05} % Palatino queda mejor con un poco más de interlineado.
+%\usepackage{times} % Times New Roman.
+
+
+% Castellano.
+\usepackage[spanish]{babel}
+
+% Tamaño de página y márgenes.
+\usepackage[a4paper, headheight=16pt]{geometry}
+
+% Para \href y \url
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=true,
+linkcolor=black,
+pdfborder= 0 0 0
+}
+
+% Gráficos:
+
+% Para generar pdf.
+\usepackage[pdftex]{graphicx}
+\usepackage{pdfpages}
+
+% Para ejemplos de código.
+\usepackage{listings}
+\lstset{ 
+    language=Prolog,            
+    basicstyle=\fontfamily{pcr}\small,
+    breaklines=true,            % Wrappea las lineas automáticamente.
+    frame=single               % Un recuadro en los listings.
+}
+
+\usepackage{amssymb,amsmath}
+
+% Son necesarios?
+%\usepackage{float}
+%\usepackage{color}
+
+%------------------------------ ~paquetes ---------------------------------
+
+%------------------------- Inicio del documento ---------------------------
+
+\begin{document}
+
+% ---------------------- Encabezado y pie de página -----------------------
+
+% Encabezado: sección a la derecha.
+% Pie de página: número de página a la derecha.
+
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]{\markboth{}{\thesection\ \ #1}}
+\lhead{}
+\chead{}
+\rhead{\rightmark}
+\lfoot{}
+\cfoot{}
+\rfoot{\thepage}
+
+% ---------------------- ~Encabezado y pie de página ----------------------
+
+% -------------------------- Título y autor(es) ---------------------------
+
+\title{Prolog}
+\author{}
+
+% -------------------------- ~Título y autor(es) --------------------------
+
+% ------------------------------- Carátula --------------------------------
+
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+% Logo facultad.
+\begin{center}
+\includegraphics[scale=0.55]{./fiuba}\\
+\textsc{\Large Universidad de Buenos Aires}\\[0.2cm]
+\textsc{\Large Facultad de Ingeniería}\\[1.5cm]
+
+% Título central.
+
+\textsc{\large Teoría de Lenguajes (75.31)} \\[0.3cm]
+\textsc{\large Trabajo Práctico} \\[0.5cm]
+
+\rule{\linewidth}{0.5mm} \\[0.4cm]
+{\huge \bfseries Prolog} \\[0.3cm]
+{\Large \bfseries Introducción al lenguaje y a la programación lógica}
+\rule{\linewidth}{0.5mm} 
+
+\vfill
+
+% Tabla de integrantes.
+\begin{flushleft}
+\Large\emph{Integrantes} \\[0.2cm]
+
+
+% Separación entre columnas.
+\begin{tabular}{lll}
+Axel Straminsky & XXXXX & axel\_stram@hotmail.com \\
+Demian Ferrerio & 88443 & epidemian@gmail.com \\
+Martín Paulucci & 88509 & martin.c.paulucci@gmail.com \\
+\end{tabular}
+\end{flushleft}
+
+% Pie de página de la carátula.
+{\Large \today}
+
+\end{center}
+\end{titlepage}
+
+% ------------------------------- ~Carátula -------------------------------
+
+% -------------------------------- Índice ---------------------------------
+
+% Hago que las páginas se comiencen a contar a partir de aquí.
+\setcounter{page}{1}
+
+% Índice.
+\tableofcontents
+\newpage
+
+% -------------------------------- ~Índice --------------------------------
+
+% ----------------------------- Inicio del tp -----------------------------
+
+\clearpage	
+
+% Saca la indentación de los párrafos y añade un espacio entre cada uno.
+<<<<<<< .mine
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+=======
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
+>>>>>>> .r34
+
+% Cosas Nuevas -----------------------------------------------------------------
+
+% Nota de traducción: statement = proposición
+
+\section{Programción Lógica}
+\subsection{Concepción}
+
+El paradigma de la programación lógica surge de la necesidad de los programadores, o científicos, de expresar formalmente sus objetivos, así como sus conocimientos y suposiciones. La lógica provee las bases para deducir consecuencias a partir de premisas, para encontrar la verdad o la falsedad de una proposición a partir de otras y para verificar la valiz de de un argumento lógico.
+
+Si bien el propósito de las computadoras es ser usadas por personas, la dificultad de su construcción fue tan grande que los lenguajes utilizados para expresar los problemas que estas debían resolver fueron diseñados desde la perspectiva del funcionamiento de la computadora en sí.
+
+Las computadoras modernas están basadas en la arquitectura de von Neumann \cite{vonneumann}, el la cual un programa consiste en una serie de instrucciones que operan sobre registros y que se ejecutan una tras otra, pudiendo la ejecución de una instrucción influir en qué ejecución se ejecute a continuación.
+
+A medida que los programas se hicieron más complejos, se necesitó más esfuerzo para traducir los conceptos que se querían modelar a un lenguaje que las computadoras pudieran interpretar, es decir \emph{programar} se volvió más complejo. Para aliviar este problema se crearon lenguajes con mayor poder de abstracción, capaces de expresar las ideas del progrmador de forma más directa. Partiendo desde el lenguaje ensamblador, y pasando por C, Pascal, Java y muchos otros, todos estos lenguajes son derivados de la arquitectura de von Neumann, y por lo tanto comparten el mismo modelo subyacente de ejecución. Este paradigma de programción es el que se conoce como la \emph{programación imperativa}.
+
+Si bien la lógica se usó como una herramienta para diseñar computadoras y programas desde sus comienzos, su uso directo como lenguaje de progrmación, lo cual se conoce como \emph{programción lógica}, se plantea mucho después \footnote{Finales de la década del 60 o principios de la del 70.} como alternativa a la programción imperativa.
+
+\subsection{Declaratividad}
+
+La programción lógica, así como la programción funcional, perteneca al paradigma de la programción declarativa, y difiere enormemente de la programación imperativa. En vez estar basada en el modelo de von Neumann, la programación declarativa se basa en un modelo abstracto que no guarda ninguna relación con el modelo de la máquina. 
+
+Así, el programador, en vez de tener que adaptar sus ideas a un modelo que se diseñó para una arquitectura de computadora en un momento dado, puede expresarlas sobre un modelo diseñado para ese fín, sin tener que preocuparse por la forma en que luego la computadora ejecutará estas acciones. 
+
+Es decir, un programa en un lenguaje declarativo describe \emph{qué} debe realizarse y no \emph{cómo} debe realizarse.
+
+A modo de ejemplo, se puede mencionar el popular lenguaje de consultas sobre bases de datos SQL. Éste es un lenguaje declarativo ya que el programador SQL expresa las consultas sobre un modelo abstracto (basado en el álgebra relacional) en términos de ``tablas'' y ``registros'', y es luego el entorno de ejecución (llamado motor de base de datos) quien se encarga de traducir estas consultas a instrucciones que la computadora puede ejecutar.
+
+\subsection{Programas Lógicos}
+
+Para resolver un problema dentro del paradigma lógico, en vez de darse las instrucciones necesarias para llevar a cabo las operaciones que lo resuelven, se define la información (los conocimientos) del problema y sus suposiciones en forma \emph{axiomas lógicos}. Ese conjunto de aximas es lo que en el paradigma lógico se conoce como \emph{programa}. Para ejecutar el programa se debe proporcionar el problema a resolver, el objetivo, expresado como una \emph{proposición} lógica a ser probada. 
+
+Una ejecución es un intento por encontrar una solución que pruebe el objetivo dado cumpliendo con los axiomas del programa. Esta búsqueda consiste en la aplicación de las reglas de la lógica para inferir conclusiones a partir de los axiomas. El resultado de una ejecución son las soluciones que prueban la proposición objetivo. En caso de no poder probarse el objetivo, quiere decir que el problema no tiene solución dadas las suposiciones explicitadas en el programa. De esta manera, la clave para hacer un programa lógico es poder explicitar el conjunto de axiomas que describa correctamente la solución del problema.
+
+Una característica de la programación lógica es que las proposiciones objetivo son típicamente exitenciales. Es decir, que proponen la existencia de alguna solución que cumple con ciertas propiedades. 
+
+Un ejemplo de una proposición objetivo podría ser ``existe algún $X$ tal que $X$ pertenece a la lista $[4,2,5]$''. El programa donde este objetivo se ejecute deberá tener entonces los axiomas que definan la relación de pertenencia entre un elemento y una lista. Si esos axiomas están bien definidos, el resultado de la ejecución del problema serán las soluciones $X=4$, $X=2$ y $X=5$.
+
+El mismo programa lógico podría usarse para resolver problemas más complejos, por ejemplo ``existe algún $X$ tal que $X$ pertenece a $[3,4,5,6]$ y no pertenece a $[1,2,3,4]$'', cuyas soluciones serían $X=5$ y $X=6$. O ``existen algunos $X$ e $Y$ tales que $X$ pertenece a $[1,2,3]$ e $Y$ pertenece a $[10,20]$'' en cuyo caso las soluciones serían los elementos del producto cartesiano entre los dos conjuntos dados, es decir:
+\begin{align*}
+X& =1,Y=10& X& =2,Y=10& X& =3,Y=10 \\
+X& =1,Y=20& X& =2,Y=20& X& =3,Y=20
+\end{align*}
+
+La proposición ``existe algún $X$ tal que $X$ pertenece a $[1, 2]$ y $X$ pertenece a $[3, 4]$'' no podrá ser probada y por lo tanto su solución será vacía.
+
+Las proposiciones objetivo no necesariamente deben ser existenciales. Por ejemplo, la proposición ``$3$ pertenece a $[2,3,4]$'' simplemente será verificada.
+
+Finalmente, las soluciones no necesariamente tienen que ser finitas. Por ejemplo ``existe $L$ tal que $5$ pertenece a $L$'' tiene infinitas soluciones:
+\begin{align*}
+L& =[5|Y] \\
+L& =[X_1, 5|Y] \\
+L& =[X_1,X_2,5|Y] \\
+ & \cdots
+\end{align*}
+
+Donde los $X_i$ representan elementos de cualquier valor en la lista solución, e $Y$ representa una lista de cualquier longitud contenida al final de la lista solución. Es decir que la solución $L=[X_1,5|Y]$,por ejemplo, podría leerse simplemente como ``una lista de al menos dos elementos cuyo segundo elemento es $5$''.
+
+\subsection{Cláusulas de Horn}
+\label{sec:horn}
+
+En lógica, una cláusula es una disjunción de literales \cite{clausula}, por ejemplo:
+\[
+l_1 \lor \cdots \lor l_n
+\]
+
+Un cláusula de Horn es un cláusula con a lo sumo un literal positivo \cite{horn_clauses}, por ejemplo:
+\[
+\lnot b_1 \lor \cdots \lor \lnot b_n \lor h
+\]
+
+Lo cual se puede reescribir como una implicación lógica equivalentemente:
+\begin{equation} \label{eq:horn}
+(b_1 \land \cdots \land b_n) \rightarrow h
+\end{equation}
+
+La programación lógica tiene sus bases en las cláusulas de Horn gracias a su interpretación procedural formulada por Robert Kowalski, quien demostró que una clásula de Horn como \eqref{eq:horn} puede resolverse proceduramente \cite{kowalski} planteando $h$ como el encabezado (\emph{head}) de un procedimiento y $b_1 \land \cdots \land b_n$ como su cuerpo (\emph{body}). Lo cual puede leerse proceduralmente como: \emph{para resolver (ejecutar) $h$, resolver (ejecutar) $b_1$ y $b_2$ y $\cdots$ y $b_n$}. 
+
+Para remarcar esta relación entre el encabezado de la cláusula y su cuerpo, en la programción lógica suele utilizarse el operador de consecuencia lógica, cuya notación resulta más similiar a la de una \emph{regla} de Prolog (ver sección \ref{sec:reglas}):
+\begin{equation*} 
+h \leftarrow (b_1 \land \cdots \land b_n)
+\end{equation*}
+
+\newpage
+\section{Historia de Prolog}
+
+El nombre \textit{Prolog} proviene de la abreviatura \textit{PROgrammation en LOGique}. Fue creado por Alain Colmerauer juanto a Philippe Roussel en 1972 en la Universidad de Marsella, y está basado en la interpretación procedual de las Cláusulas de Horn (ver sección \ref{sec:horn}).
+
+La motivación que llevó al nacimiento de Prolog fue hacer un lenguaje que permita hacer programas que llevaran a cabo demostraciones automáticas de teoremas. Así empezaron los primeros trabajos de inteligencia artificial que más de veinte años después dieron lugar al primer lenguaje de programación que contempla, como parte del intérprete, los mecanismos de inferencia necesarios para la demostración automática. Este primer lenguaje está basado en el formalismo matemático de la Lógica de Primer Orden y ha dado inicio a un nuevo y activo campo de investigación entre las matemáticas y la computación que se ha denominado la Programación Lógica.
+
+La Programación Lógica tiene sus orígenes más cercanos en los trabajos de prueba automática de teoremas de los años sesenta. J. A. Robinson propone en 1965 una regla de inferencia a la que llama resolución, mediante la cual la demostración de un teorema puede ser llevada a cabo de manera automática. La resolución es una regla que se aplica sobre cierto tipo de fórmulas del Cálculo de Predicados de Primer Orden, llamadas cláusulas y la demostración de teoremas bajo esta regla de inferencia se lleva a cabo por reducción al absurdo. Como ya se mencionó, Prolog implementa la interpretación de estas cláusulas, lo que, gracias a su eficiencia, relega los intentos anteriores de lenguajes lógicos, y se vuelve el lenguaje lógico más popular.
+
+\newpage
+\section{Actualidad}
+\subsection{Usos}
+\subsection{Implementaciones}
+
+Hay, en la actualidad, distintas implementaciónes de Prolog, las cuales, según sus necesidades, implementan distintos \textit{features}.
+
+
+Las implementaciones más conocidas son:
+\begin{itemize}
+    \item SWI-Prolog: Soporta mulithreating.
+    \item Mercury: Mezcla de programación lógica y funcional.
+    \item Fprolog: Añade lógica difusa.
+    \item Prolog+: Añade clases y jerarquías de clases.
+    \item LogTalk: añade \textit{POO}.
+    \item $\lambda$prolog: soporta polimorfismo y programación de alto orden.
+\end{itemize}
+
+\newpage
+\section{Programación en Prolog}
+\subsection{Hechos}
+\subsection{Átomos y Predicados}
+\subsection{Variables}
+\subsection{Reglas}
+\label{sec:reglas}
+
+\subsection{Consultas (Queries)}
+\subsection{Tipos de datos}
+\subsubsection{Simples}
+\subsubsection{Listas}
+\subsection{Recursividad}
+(ejemplo ancestro)
+
+\newpage
+\section{Modelo de ejecución de Prolog}
+\subsection{Algoritmo de backtracking}
+\subsection{Seguimiento de factorial}
+    Algún otro ejemplo? (el de ancestro es copado para hacer un seguimiento =P)
+
+\newpage
+\section{Ejemplos complejos}
+
+Vemos a continuación dos ejemplos más completos.
+
+\subsection{Cambio}
+
+``Cambio'' es un programa que simula las posibilidades de cambiar un billete por monedas.
+
+Veamos el código fuente del programa:
+\lstinputlisting{../src/cambio.pl}
+
+\subsection{N Reinas}
+
+\newpage
+\section{Conclusiones}
+
+
+\clearpage
+\begin{thebibliography}{9}
+    \bibitem{vonneumann} \emph{Von Neumann Architecture}, artículo en Wikipedia: \url{http://en.wikipedia.org/wiki/Von\_Neumann\_architecture}
+    \bibitem{wiki} \emph{Prolog}, artículo en Wikipedia: \url{http://en.wikipedia.org/wiki/Prolog}
+    \bibitem{clausula} \emph{Clause (logic)}, artículo en Wikipedia: \url{http://en.wikipedia.org/wiki/Clause_(logic)}
+    \bibitem{horn_clauses} \emph{Horn Clauses}, artículo en Wikipedia: \url{http://en.wikipedia.org/wiki/Horn_clauses}
+    \bibitem{kowalski} Robert Kowalski, \emph{Predicate Logic as Programming Language}. IEEE Computer Society Press, 1986.
+    \bibitem{hist1} \emph{Historia de Prolog}, \url{http://prolog6.tripod.com/historia.htm}
+    \bibitem{artofprolog} Leon Sterling \& Ehud Shapiro, \emph{The Art of Prolog: Advanced Programming Techniques}. The MIT Press, 2nd Edition, 1999.
+\end{thebibliography}
+
+% ------------------------------ Fin del tp -------------------------------
+
+\end{document}
+
+%---------------------------- Fin del documento ---------------------------
+
+
+
+

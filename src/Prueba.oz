@@ -11,7 +11,7 @@ define
          if Valor == Esperado then
             Exitosas := @Exitosas + 1
          else
-            % show: con endline. print: sin endline. 
+            % show -> con endline. print -> sin endline. 
             % printInfo/showInfo -> sólo strings (no muestran bien las listas)
             {System.showInfo 'Fallo en prueba: '#Descripcion}
             {System.printInfo '  Se esperaba: '} 

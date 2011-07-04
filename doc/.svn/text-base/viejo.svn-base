@@ -1,0 +1,90 @@
+% Cosas Viejas -----------------------------------------------------------------
+
+\section{Hisotria}
+Prolog es un lenguaje de programación lógico ideado en los '70 por Colmerauer y Roussel. \\
+
+La base conceptual del paradigma detrás del lenguaje fue desarrollada en forma independiente por Alfred Horn en los '50, al publicar \textit{On sentences which are true of direct unions of algebras}, en la cual presenta un modelo lógico para el tratamiento de oraciones del lenguaje natural, donde se explican las luego denominadas ``cláusulas de Horn''. \\
+
+Uno de los objetivo al crear este lenguaje fue el de poder crear programas que sirviesen como demostradores automáticos de teoremas. \\
+
+Inicialmente era un lenguaje interpretado, hasta que en 1983 se desarrollo un compilador capaz de traducir Prolog a un conjunto de instrucciones de una máquina abstracta denominada Warren Abstract Machine (WAM), y desde entonces Prolog es semi-interpretado. \\
+
+\section{Programación Lógica}
+La programación lógica es un paradigma de programación dentro del paradigma de programación declarativa, y permite abstraerse del ``cómo'' y concentrarse en el ``qué'' a la hora de escribir programas. Particularmente Prolog implementa un tipo particular de lógica que es la lógica de primer orden. \\
+
+Este paradigma tiene como característica principal la aplicación de las \emph{reglas de la lógica} para inferir conclusiones a partir de datos. Conociendo la información y las condiciones del problema, la ejecución de un programa consiste en la búsqueda de un objetivo dentro de las declaraciones realizadas. Esta forma de tratamiento de la información permite pensar la existencia de \emph{``programas inteligentes''} que puedan responder, no por tener en la base de datos todos los conocimientos, sino por poder inferirlos a través de la deducción.  \\
+
+Un programa lógico no tiene un algoritmo que indique los pasos que detallen la manera de llegar a un resultado, sino que está formado por expresiones que describen la solución (o más precisamente, la \emph{declaran}). De esta manera, la clave para hacer un programa lógico es poder explicitar una declaración que describa correctamente la solución del problema. \\
+
+\newpage
+
+\section{Lógica de Primer Orden}
+
+La lógica de primer orden es un sistema de lógica formal usado en distintas disciplinas, como la matemática y la computación. La lógica de primer orden se distingue de la lógica proposicional por su uso de \emph{cuantificadores} (``para todo'' o ``existe''). \\
+
+Dentro de la lógica de primer orden, se pueden distinguir 2 partes clave: la sintaxis y la semántica. La sintaxis indica la colección de símbolos que son expresiones legales dentro de la lógica de primer orden, y la semántica determina el significado que poseen estos símbolos. \\
+
+% TODO Objetos??
+Existen 2 tipos de expresiones legales: los términos, que representan objetos, y las formulas, que representan proposiciones (expresiones que pueden ser verdaderas o falsas). \\
+
+Los términos y las forumulas de la lógica de primer orden son cadenas de simbolos, que forman el alfabeto del lenguaje. \\
+
+El conjunto de los términos se define inductivamente como: \\
+\begin{itemize}
+    \item Variables: cualquier variable es un término.
+    \item Funciones: cualquier expresión de la forma $f(t1,\cdots,tn)$ es un término.
+\end{itemize}
+El conjunto de las formulas se define inductivamente como: \\
+\begin{itemize}
+    \item Simbolos de predicado: si $P$ es un simbolo de predicado n-ario y $t1,\cdots,tn$ son terminos, entonces $P(t1,\cdots,tn)$ es una formula.
+    \item Igualdad: si $t1$ y $t2$ son términos, entonces $t1=t2$ es una formula.
+    \item Negación: si $P$ es una formula, entonces $P$ es una formula. % TODO Corregir
+    \item Conectivos Binarios: si $P$ y $Q$ son formulas, entonces $P \rightarrow Q$ es una formula. % TODO Corregir
+    \item Cuantificadores: si $P$ es una formula y $x$ una variable, entonces $(para todo x)P$ y $(existe algun x)P$ son formulas. % TODO Corregir
+\end{itemize}
+
+\newpage
+
+\section{Warren Abstract Machine (WAM)}
+
+La WAM es una máquina abstracta diseñada para ejecutar Prolog, consistente de una arquitectura de memoria y de un conjunto de instrucciones. Este diseño se convirtió en el standard de facto para la construcción de compiladores Prolog. \\
+
+\newpage
+
+\section{Aplicaciones del Paradigma Lógico}
+
+Uno de los principales campos de aplicación de este paradigma es en la Inteligencia Artificial, especialmente en todo lo relacionado con los Sistemas Expertos. \\
+
+Un sistema experto es un programa que imita el comportamiento de un experto humano. Por lo tanto, contiene información (una base de conocimientos), y una herramienta para comprender las preguntas y encontrar las respuestas en la base de datos (un motor de inferencia). \\
+
+También se aplica al Procesamiento Natural del Lenguaje, en donde se trata de dividir el lenguaje en partes y relaciones para tratar de comprender su significado.
+Otros casos en donde se utiliza este paradigma son: \\
+\begin{itemize}
+    \item Bases de datos deductivas.
+    \item Validación automática de programas.
+    \item Programación Distribuida y Multiagente.
+    \item Paralelización Automática de Programas.
+\end{itemize}
+
+% TODO No serían "variantes de Prolog" o algo así?
+\newpage
+
+\section{Implementaciones del Paradigma Lógico}
+
+\begin{itemize}
+    \item SWI-Prolog: Soporta mulithreating.
+    \item Mercury: Mezcla de mrogramación lógica y funcional.
+    \item Fprolog: Añade lógica difusa.
+    \item Prolog+: Añade clases y jerarquías de clases.
+    \item LogTalk: añade \textit{POO}.
+    \item $\lambda$prolog: soporta polimorfismo y programación de alto orden.
+\end{itemize}
+
+\newpage
+\section{Programas lógicos}
+bla
+
+\newpage
+\section{Conclusión}
+Acá va la conclusión... \\
+Así se hace una cita \cite{artofprolog}.

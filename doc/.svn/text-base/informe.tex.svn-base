@@ -1,0 +1,1447 @@
+% Tamaño de letra.
+\documentclass[12pt,titlepage]{article}
+%\documentclass{article}
+
+%------------------------------ Paquetes ----------------------------------
+
+% Paquetes:
+
+\usepackage[T1]{fontenc}
+
+%Para comentarios multilínea.
+\usepackage{verbatim}
+
+% Para tener cabecera y pie de página con un estilo personalizado.
+\usepackage{fancyhdr}
+
+% Codificación UTF-8
+\usepackage[utf8]{inputenc}
+
+% Tipografía
+\usepackage{palatino} % Esta es genial!
+\linespread{1.05} % Palatino queda mejor con un poco más de interlineado.
+%\usepackage{times} % Times New Roman.
+
+
+% Castellano.
+\usepackage[spanish]{babel}
+
+% Tamaño de página y márgenes.
+\usepackage[a4paper, headheight=16pt]{geometry}
+
+% Para \href y \url
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=true,
+linkcolor=black,
+pdfborder= 0 0 0
+}
+
+% Gráficos:
+
+% Para generar pdf.
+\usepackage[pdftex]{graphicx}
+\usepackage{pdfpages}
+
+% Para captions.
+\usepackage{caption}
+
+% Sarpadísima tipografía para listings y \texttt
+\usepackage{inconsolata}
+
+\usepackage{xcolor}
+
+% Para ejemplos de código.
+\usepackage{listings}
+\lstset{ 
+    language=Prolog,    
+    basicstyle=\ttfamily\small, % Usa inconsolata
+    identifierstyle=\ttfamily,
+    keywordstyle=\color[rgb]{0,0,1},
+    commentstyle=\color[rgb]{0.133,0.545,0.133},
+    stringstyle=\color[rgb]{0.627,0.126,0.941},
+    morekeywords={true,false},
+    showstringspaces=false,     % No muestra underscores en los espacios de los strings.
+    backgroundcolor=\color{blue!10}, % Un color suave de fondo (menos chocante que el frame=single)
+    breaklines=false,            % Wrappea las lineas automáticamente.
+    belowskip=0pt               % Reduce el espacio entre un listing y el párrafo siguiente
+    %frame=single               % Un recuadro en los listings.
+}
+
+% Para fórmulas matemáticas.
+\usepackage{amssymb,amsmath}
+
+% Para pseudocódigo. Instalar texlive-science.
+\usepackage{algorithmic}
+\usepackage{algorithm}
+
+% Para poder hacer \begin{Verbatim}[samepage=true]
+\usepackage{fancyvrb}
+
+
+% Son necesarios?
+%\usepackage{float}
+
+%------------------------------ ~paquetes ---------------------------------
+
+%------------------------- Inicio del documento ---------------------------
+
+\begin{document}
+
+% ---------------------- Encabezado y pie de página -----------------------
+
+% Encabezado: sección a la derecha.
+% Pie de página: número de página a la derecha.
+
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]{\markboth{}{\thesection\ \ #1}}
+\lhead{}
+\chead{}
+\rhead{\rightmark}
+\lfoot{}
+\cfoot{}
+\rfoot{\thepage}
+
+% ---------------------- ~Encabezado y pie de página ----------------------
+
+% -------------------------- Título y autor(es) ---------------------------
+
+\title{Prolog}
+\author{}
+
+% -------------------------- ~Título y autor(es) --------------------------
+
+% ------------------------------- Carátula --------------------------------
+
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+% Logo facultad.
+\begin{center}
+\includegraphics[scale=0.55]{./fiuba}\\
+\textsc{\Large Universidad de Buenos Aires}\\[0.2cm]
+\textsc{\Large Facultad de Ingeniería}\\[1.5cm]
+
+% Título central.
+
+\textsc{\large Teoría de Lenguajes (75.31)} \\[0.3cm]
+\textsc{\large Trabajo Práctico} \\[0.5cm]
+
+\rule{\linewidth}{0.5mm} \\[0.4cm]
+{\huge \bfseries Prolog} \\[0.3cm]
+{\Large \bfseries Introducción al lenguaje y a la programación lógica}
+\rule{\linewidth}{0.5mm} 
+
+\vfill
+
+% Tabla de integrantes.
+\begin{flushleft}
+\Large\emph{Integrantes} \\[0.2cm]
+
+
+% Separación entre columnas.
+\begin{tabular}{lll}
+Axel Straminsky & 92508 & axel\_stram@hotmail.com \\
+Demian Ferrerio & 88443 & epidemian@gmail.com \\
+Martín Paulucci & 88509 & martin.c.paulucci@gmail.com \\
+\end{tabular}
+\end{flushleft}
+
+% Pie de página de la carátula.
+{\Large \today}
+
+\end{center}
+\end{titlepage}
+
+% ------------------------------- ~Carátula -------------------------------
+
+% -------------------------------- Índice ---------------------------------
+
+% Hago que las páginas se comiencen a contar a partir de aquí.
+\setcounter{page}{1}
+
+% Índice.
+\tableofcontents
+\newpage
+
+% -------------------------------- ~Índice --------------------------------
+
+% ----------------------------- Inicio del tp -----------------------------
+
+\clearpage	
+
+% Saca la indentación de los párrafos y añade un espacio entre cada uno.
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
+
+% Luego del índice, links con color.
+\hypersetup{
+linkcolor=red
+}
+
+% Cosas Nuevas -----------------------------------------------------------------
+
+% Nota de traducción: statement = proposición
+
+\section{Programación Lógica}
+\subsection{Concepción}
+
+El paradigma de la programación lógica surge de la necesidad de los programadores, o científicos, de expresar formalmente sus objetivos, así como sus conocimientos y suposiciones. La lógica provee las bases para deducir consecuencias a partir de premisas, para encontrar la verdad o la falsedad de una proposición a partir de otras y para verificar la validez de de un argumento lógico.
+
+Si bien el propósito de las computadoras es ser usadas por personas, la dificultad de su construcción fue tan grande que los lenguajes utilizados para expresar los problemas que estas debían resolver fueron diseñados desde la perspectiva del funcionamiento de la computadora en sí.
+
+Las computadoras modernas están basadas en la arquitectura de von Neumann \cite{vonneumann}, en el la cual un programa consiste en una serie de instrucciones que operan sobre registros y que se ejecutan una tras otra, pudiendo la ejecución de una instrucción influir en qué instrucción se ejecute a continuación.
+
+A medida que los programas se hicieron más complejos, se necesitó más esfuerzo para traducir los conceptos que se querían modelar a un lenguaje que las computadoras pudieran interpretar, es decir \emph{programar} se volvió más complejo. Para aliviar este problema se crearon lenguajes con mayor poder de abstracción, capaces de expresar las ideas del programador de forma más directa. Partiendo desde el lenguaje ensamblador, y pasando por C, Pascal, Java y muchos otros, todos estos lenguajes son derivados de la arquitectura de von Neumann, y por lo tanto comparten el mismo modelo subyacente de ejecución. Este paradigma de programción es el que se conoce como la \emph{programación imperativa}.
+
+Si bien la lógica se usó como una herramienta para diseñar computadoras y programas desde sus comienzos, su uso directo como lenguaje de progrmación, lo cual se conoce como \emph{programación lógica}, se plantea mucho después \footnote{Finales de la década del 60 o principios de la del 70.} como alternativa a la programción imperativa.
+
+\subsection{Declaratividad}
+
+La programación lógica, así como la programción funcional, perteneca al paradigma de la programción declarativa, y difiere enormemente de la programación imperativa. En vez estar basada en el modelo de von Neumann, la programación declarativa se basa en un modelo abstracto que no guarda ninguna relación con el modelo de la máquina. 
+
+Así, el programador, en vez de tener que adaptar sus ideas a un modelo que se diseñó para una arquitectura de computadora en un momento dado, puede expresarlas sobre un modelo diseñado con el fin de declarar conceptos fácilmente, sin tener que preocuparse por la forma en que luego la computadora ejecutará estas acciones. 
+
+Es decir, un programa en un lenguaje declarativo describe \emph{qué} debe realizarse y no \emph{cómo} debe realizarse.
+
+A modo de ejemplo, se puede mencionar el popular lenguaje de consultas sobre bases de datos SQL. Éste es un lenguaje declarativo ya que el programador SQL expresa las consultas sobre un modelo abstracto (basado en el álgebra relacional) en términos de ``tablas'' y ``registros'', y es luego el entorno de ejecución (llamado motor de base de datos) quien se encarga de traducir estas consultas a instrucciones que la computadora puede ejecutar.
+
+\subsection{Programas Lógicos}
+\label{sec:programaslogicos}
+
+Para resolver un problema dentro del paradigma lógico, en vez de darse las instrucciones necesarias para llevar a cabo las operaciones que lo resuelven, se define la información (los conocimientos) del problema y sus suposiciones en forma \emph{axiomas lógicos}. Ese conjunto de aximas es lo que en el paradigma lógico se conoce como \emph{programa}. Para ejecutar el programa se debe proporcionar el problema a resolver, el objetivo, expresado como una \emph{proposición} lógica a ser probada. 
+
+Una ejecución es un intento por encontrar una solución que pruebe el objetivo dado cumpliendo con los axiomas del programa. Esta búsqueda consiste en la aplicación de las reglas de la lógica para inferir conclusiones a partir de los axiomas. El resultado de una ejecución son las soluciones que prueban la proposición objetivo. En caso de no poder probarse el objetivo, quiere decir que el problema no tiene solución dadas las suposiciones explicitadas en el programa. De esta manera, la clave para hacer un programa lógico es poder explicitar el conjunto de axiomas que describa correctamente la solución del problema.
+
+Una característica de la programación lógica es que las proposiciones objetivo son típicamente exitenciales. Es decir, que proponen la existencia de alguna solución que cumple con ciertas propiedades. 
+
+Un ejemplo de una proposición objetivo podría ser ``existe algún $X$ tal que $X$ pertenece a la lista $[4,2,5]$''. El programa donde este objetivo se ejecute deberá tener entonces los axiomas que definan la relación de pertenencia entre un elemento y una lista. Si esos axiomas están bien definidos, el resultado de la ejecución del problema serán las soluciones $X=4$, $X=2$ y $X=5$.
+
+El mismo programa lógico podría usarse para resolver problemas más complejos, por ejemplo ``existe algún $X$ tal que $X$ pertenece a $[3,4,5,6]$ y no pertenece a $[1,2,3,4]$'', cuyas soluciones serían $X=5$ y $X=6$. O ``existen algunos $X$ e $Y$ tales que $X$ pertenece a $[1,2,3]$ e $Y$ pertenece a $[10,20]$'' en cuyo caso las soluciones serían los elementos del producto cartesiano entre los dos conjuntos dados, es decir:
+\begin{align*}
+X& =1,Y=10& X& =2,Y=10& X& =3,Y=10 \\
+X& =1,Y=20& X& =2,Y=20& X& =3,Y=20
+\end{align*}
+
+La proposición ``existe algún $X$ tal que $X$ pertenece a $[1, 2]$ y $X$ pertenece a $[3, 4]$'' no podrá ser probada y por lo tanto su solución será vacía.
+
+Las proposiciones objetivo no necesariamente deben ser existenciales. Por ejemplo, la proposición ``$3$ pertenece a $[2,3,4]$'' simplemente será verificada.
+
+Finalmente, las soluciones no necesariamente tienen que ser finitas. Por ejemplo ``existe $L$ tal que $5$ pertenece a $L$'' tiene infinitas soluciones:
+\begin{align*}
+L& =[5|Y] \\
+L& =[X_1, 5|Y] \\
+L& =[X_1,X_2,5|Y] \\
+ & \cdots
+\end{align*}
+
+Donde los $X_i$ representan elementos de cualquier valor en la lista solución, e $Y$ representa una lista de cualquier longitud contenida al final de la lista solución. Es decir que la solución $L=[X_1,5|Y]$,por ejemplo, podría leerse simplemente como ``una lista de al menos dos elementos cuyo segundo elemento es $5$''.
+
+\subsection{Cláusulas de Horn}
+\label{sec:horn}
+
+En lógica, una cláusula es una disjunción de literales \cite{clausula}, por ejemplo:
+\[
+l_1 \lor \cdots \lor l_n
+\]
+
+Un cláusula de Horn es un cláusula con a lo sumo un literal positivo \cite{horn_clauses}, por ejemplo:
+\[
+\lnot b_1 \lor \cdots \lor \lnot b_n \lor h
+\]
+
+Lo cual se puede reescribir como una implicación lógica equivalentemente:
+\begin{equation} \label{eq:horn}
+(b_1 \land \cdots \land b_n) \rightarrow h
+\end{equation}
+
+La programación lógica tiene sus bases en las cláusulas de Horn gracias a su interpretación procedural formulada por Robert Kowalski, quien demostró que una clásula de Horn como \eqref{eq:horn} puede resolverse proceduralmente \cite{kowalski} planteando $h$ como el encabezado (\emph{head}) de un procedimiento y $b_1 \land \cdots \land b_n$ como su cuerpo (\emph{body}). Lo cual puede leerse proceduralmente como: \emph{para resolver (ejecutar) $h$, resolver (ejecutar) $b_1$ y $b_2$ y $\cdots$ y $b_n$}. 
+
+Para remarcar esta relación entre el encabezado de la cláusula y su cuerpo, en la programación lógica suele utilizarse el operador de consecuencia lógica, cuya notación resulta más similiar a la de una \emph{regla} de Prolog (ver sección \ref{sec:reglas}):
+\begin{equation*} 
+h \leftarrow (b_1 \land \cdots \land b_n)
+\end{equation*}
+
+\newpage
+\section{El Lenguaje Prolog}
+
+\subsection{Historia}
+
+El nombre \textit{Prolog} proviene de la abreviatura \textit{PROgrammation en LOGique}. Fue creado por Alain Colmerauer juanto a Philippe Roussel en 1972 en la Universidad de Marsella, y está basado en la interpretación procedual de las Cláusulas de Horn (ver sección \ref{sec:horn}).
+
+La motivación que llevó al nacimiento de Prolog fue hacer un lenguaje que permita hacer programas que llevaran a cabo demostraciones automáticas de teoremas. Así empezaron los primeros trabajos de inteligencia artificial que más de veinte años después dieron lugar al primer lenguaje de programación que contempla, como parte del intérprete, los mecanismos de inferencia necesarios para la demostración automática. Este primer lenguaje está basado en el formalismo matemático de la Lógica de Primer Orden y ha dado inicio a un nuevo y activo campo de investigación entre las matemáticas y la computación que se ha denominado la Programación Lógica.
+
+La Programación Lógica tiene sus orígenes más cercanos en los trabajos de prueba automática de teoremas de los años sesenta. J. A. Robinson propone en 1965 una regla de inferencia a la que llama resolución, mediante la cual la demostración de un teorema puede ser llevada a cabo de manera automática. La resolución es una regla que se aplica sobre cierto tipo de fórmulas del Cálculo de Predicados de Primer Orden, llamadas cláusulas y la demostración de teoremas bajo esta regla de inferencia se lleva a cabo por reducción al absurdo. Como ya se mencionó, Prolog implementa la interpretación de estas cláusulas, lo que, gracias a su eficiencia, relega los intentos anteriores de lenguajes lógicos, y se vuelve el lenguaje lógico más popular.
+
+%\subsection{Usos}
+
+% TODO ???
+
+\subsection{Implementaciones y Extensiones}
+
+Hay, en la actualidad, distintas implementaciónes de Prolog, las cuales, según sus necesidades, implementan distintos \textit{features}.
+
+Algunas de estas implementaciones son:
+\begin{itemize}
+    \item \textbf{SWI-Prolog} añade multithreading y concurrencia por pasaje de mensajes y aritmética de presición arbitraria entre otras cosas\footnote{\url{http://www.swi-prolog.org/}}.
+    \item \textbf{LogTalk} añade orientación a objetos basada tanto en clases como en prototipos\footnote{\url{http://logtalk.org/}}.
+    \item \textbf{$\lambda$prolog} soporta programación de alto orden y tipado polimórfico\footnote{\url{http://www.lix.polytechnique.fr/Labo/Dale.Miller/lProlog/}}.
+    \item \textbf{Fprolog} añade lógica difusa.
+    \item \textbf{Prolog+} añade clases y jerarquías de clases.
+\end{itemize}
+
+\subsection{Legado}
+
+Prolog fue el precursor de un paradigma que, si bien hoy en día no goza de una alta popularidad, aún sigue vigente. Influenció la creación de muchos lenguajes lógicos y funcionales, y sigue siendo el lenguaje más utilizado académicamente para enseñar el paradigma lógico.
+
+Algunos de los lenguajes influenciados por Prolog intentaron llevar la lógica más allá del ámbito académico. Datalog\footnote{\url{http://en.wikipedia.org/wiki/Datalog}}, por ejemplo, es un lenguaje de queries para bases de datos deductivas. Mercury\footnote{\url{http://www.mercury.csse.unimelb.edu.au/}}, influenciado tanto por Prolog como por Haskell, es un lenguaje logico/funcional de propósito general.
+
+Probablemente el lenguaje derivado de Prolog de mayor uso en la actualidad sea Erlang\footnote{\url{http://www.erlang.org/}} que, si bien no es un lenguaje lógico, hereda de Prolog la mayoría de su sintaxis y bastante de su semántica (e.g. declaratividad, pattern matching).
+
+Uno de los usos que se le da hoy en día a la programación lógica son los BRMS's (\emph{business rule management system}), que utilizan motores de inferencia de reglas y en general implementan algún lenguaje lógico para la definición de las reglas de negocio. Un ejemplo popular de BRMS es Drools \footnote{\url{http://www.jboss.org/drools/}}
+
+\newpage
+\section{Programación en Prolog}
+
+La elementos básicos del lenguaje derivan de la lógica: el término, que unifica todos los tipos de datos; y la proposición (\emph{statement}), que a su vez se divide en tres tipos básicos: hechos, reglas y queries.
+
+La programación Prolog es interactiva: un programa es un conjunto de hechos y reglas, que representan la información de un sistema y las relaciones entre los objetos que lo componen, y para extraer información de éste programa (ejecutarlo), se realizan consultas (queries). 
+
+\subsection{Hechos}
+
+El tipo de proposición más simple en Prolog es el \emph{hecho}. Respresenta una verdad en un programa. Por ejemplo:
+\begin{lstlisting}
+gato(felix).
+\end{lstlisting}
+Puede interpretarse como ``Felix es un gato''\footnote{El único único gato.}.
+
+Los hechos sirven para definir relaciones entre elementos. Por ejemplo:
+\begin{lstlisting}
+padre(zeus, apolo).
+\end{lstlisting}
+Que puede interpretarse como: la relación \lstinline|padre| se cumple para los elementos \lstinline|zeus| y \lstinline|apolo|. El término utilizado en Prolog para referirse a las relaciones es \emph{predicado} y para los elementos individuales \emph{átomo} (ver Tipos de Datos \ref{sec:datos}). Tanto predicados como átomos deben ser identificadores que comiencen con minúscula.
+
+Los hechos son especialmente útiles para representar relaciones entre un conjunto de elementos finitos, lo cual puede interpretarse como una forma de \emph{base de datos}. Por ejemplo:
+\begin{lstlisting}[label=lst:diosesgriegos]
+padre(urano, cronos).
+padre(cronos, hades).
+padre(cronos, poseidon).
+padre(cronos, zeus).
+padre(zeus, apolo).
+padre(zeus, artemisa).
+\end{lstlisting}
+
+\subsection{Consultas (Queries)}
+
+Otro tipo de proposición en Prolog son las consultas, o \emph{queries}, que sirven para extraer información de un programa lógico. Las queries se \emph{ejecutan} sobre un programa, es decir, se resuelven a partir de los axiomas definidos en él. En la programación lógica en general se las conoce como \emph{proposición objetivo} (\ref{sec:programaslogicos})
+
+Un ejemplo de query sobre el programa antes visto de los dioses griegos (\ref{lst:diosesgriegos}) podría ser \lstinline|padre(zeus, apolo)|, que, al ejecutarlo\footnote{Los sistemas Prolog en general proveen un ambiente interactivo para ejecutar queries sobre programas. En este trabajo práctico se utilizó la implementación de SWI Prolog.}, el sistema informa que se cumple devolviendo \emph{true}:
+%\begin{lstlisting}[basicstyle=\color{green}\ttfamily\small,backgroundcolor=\color{black!70}]
+\begin{lstlisting}
+?- padre(zeus, apolo).
+true.
+?- padre(zeus, cronos).
+false.
+?- padre(juan, tobias).
+false.
+\end{lstlisting}
+
+Se puede observar que cuando la proposición no se cumple, el resultado es \emph{false}. En este caso, la sintaxis de las queries resulta idéntica a la de los hechos; la diferencia radica en que los hechos se escriben en el programa, mientras que las queries se ejecutan en el el ambiente interactivo de Prolog, el cual antepone \lstinline|?-| en cada linea para diferenciarlas de los resultados.
+
+Este es el tipo más sencillo de queries, es decir, verificar si se cumple un predicado a partir de hechos. A medida que se presenten nuevas construcciones del lenguaje se mostrarán queries más complejas.
+
+\subsection{Variables}
+
+La variable lógica es un término de valor arbitrario (i.e. no especificado). Dar una definición más precisa que esa sería engorroso y probablemente poco claro. Su uso, sin embargo, resulta claro observando algunos ejemplos de queries que utilicen variables.
+
+Volviendo al programa de los dioses griegos (\ref{lst:diosesgriegos}), con el uso de variables, se puede preguntar quién es el padre de Zeus:
+\begin{lstlisting}
+?- padre(X, zeus).
+X = cronos .
+\end{lstlisting}
+
+Puede observarse que las variables, a diferencia de los átomos, comienzan con mayúscula.
+
+Las queries con variables son en realidad predicados existenciales. En este caso, la query puede leerse como ``existe $X$ tal que $X$ es padre de Zeus''. 
+
+El resultado de una query, en general, son las substituciones de las variables que ésta utiliza tales que verifiquen la query. Una substitución es un par $\{X=a\}$ donde $X$ es una variable y $a$ es un término.
+
+Puede no existir ninguna substitución de las variables de una query que la verifiquen:
+\begin{lstlisting}
+?- padre(X, urano).
+false.
+\end{lstlisting}
+
+No existe valor de \lstinline|X| que verifique \lstinline|padre(X, urano)|, es decir, Urano es huérfano.
+
+Si una query tiene varias soluciones (i.e. varias susbtituciones que la verfican), estas se listan a medida que se resuelven\footnote{En SWI Prolog hay que ingresar \emph{n} (\emph{next}) para que se siga ejecutando la query y se busque la siguiente solución. Si se presiona \emph{enter}, se termina de ejecutar la query.}. Por ejemplo, para listar los hijos de Cronos:
+\begin{lstlisting}
+?- padre(cronos, X).
+X = hades ;
+X = poseidon ;
+X = zeus.
+\end{lstlisting}
+
+Con el uso de variables, pueden escribirse queries más complejas, por ejemplo, si se desea saber si Poseidon y Hades son hermanos:
+\begin{lstlisting}
+?- padre(X, poseidon), padre(X, hades).
+X = cronos .
+\end{lstlisting}
+
+Es decir ``existe $X$ tal que $X$ es padre de Poseidon y $X$ es padre de Hades''.
+
+Incluso puede utilizarse más de una variable en una query. Por ejemplo, para conocer todos los hermanos en la base de datos:
+\begin{lstlisting}[label=lst:queryhermanos]
+% El \== es el operador 'distinto'
+?- padre(X, A), padre(X, B), A \== B.
+X = cronos,
+A = hades,
+B = poseidon ;
+X = cronos,
+A = hades,
+B = zeus ;
+X = cronos,
+A = poseidon,
+B = hades ;
+% ... Hay un total de 8 soluciones.
+\end{lstlisting}
+
+Es decir, todas las ternas de individuos $\{X,A,B\}$ tales que $X$ sea padre de $A$ y de $B$, y $A$ y $B$ no sean el mismo individuo. Notar que la entre los resultados aparecen dos veces cada relación de ``hermanos'', por ejemplo $\{X=cronos,A=hades,B=poseidon\}$ y $\{X=cronos,A=poseidon,B=hades\}$ ya que esta relación es ``conmutativa''.
+
+\subsubsection*{Hechos Universales}
+
+Las variables también pueden ser usadas en hechos para definir \emph{hechos universales}. Por ejemplo, si se tiene un predicado \lstinline|gusta/2|\footnote{El \lstinline|/2| define la aridad de un predicado. Ver sección (\ref{sec:datos}).} que indica qué le gusta a cada persona:
+\begin{lstlisting}
+gusta(lucas, programar).
+gusta(juan, dormir).
+gusta(juan, tv).
+gusta(djfray, cocinar).
+% ... etc
+\end{lstlisting}
+
+Es un hecho que a todo el mundo le gusta el chocolate (si no lo és, debería). Se podría escribir a mano cada hecho \lstinline|gusta| entre cada individuo y \lstinline|chocolate|, pero eso sería engorroso y además poco robusto, ya que si en un futuro se llegase a consultar por algún individuo no contemplado en esa cantidad finita de hechos daría que a éste no le gusta el chocolate, lo cual es inadmisible. La solución es sencilla, hacer que \lstinline|gusta| sea un hecho para cualquier individuo y \lstinline|chocolate|:
+\begin{lstlisting}
+gusta(X, chocolate).
+\end{lstlisting}
+
+\subsection{Reglas}
+\label{sec:reglas}
+
+Los ejemplos interesantes de queries existenciales ya vistos definían en sí relaciones en un modelo. Por ejemplo, la query \lstinline|?- padre(X, A), padre(X, B), A \== B| define la relación ``hermano'' entre \lstinline|A| y \lstinline|B|. Las \emph{reglas}, en principio, pueden utilizarse para plasmar esa relación en el programa lógico mismo y hacer así un modelo más interesante. Esa misma relación de hermandad traducida a una regla sería:
+\begin{lstlisting}
+hermano(A, B) :- padre(X, A), padre(X, B), A \== B.
+\end{lstlisting}
+
+Puede interpretarse como ``$A$ y $B$ son hermanos si existe un $X$ tal que $X$ es padre de $A$ y de $B$ y $A$ y $B$ son distintos''. Así, queda definido un nuevo predicado \lstinline|hermano/2|, que puede ser usado para hacer queries más directas:
+\begin{lstlisting}
+?- hermano(apolo, artemisa).
+true .
+\end{lstlisting}
+
+Las reglas son el equivalente en Prolog a las cláusulas de Horn. La forma general de una cláusula de Horn es:
+\[
+h \leftarrow (b_1 \land \cdots \land b_n)
+\]
+
+Que, traducido a una regla de Prolog sería:
+\begin{lstlisting}
+h :- b1, ..., bn
+\end{lstlisting}
+
+Donde $h$ es la cabeza (\emph{head}) de la regla y $(b_1 \land \cdots \land b_n)$ es el cuerpo (\emph{body}), y tanto $h$ como $b_1 \cdots b_n$ son predicados lógicos.
+
+Se puede observar que los hechos son en realidad un caso especial de regla cuando $n=0$. El hecho:
+\begin{lstlisting}
+gusta(X, chocolate).
+\end{lstlisting}
+
+Es equivalente a una regla que se cumple siempre:
+\begin{lstlisting}
+gusta(X, chocolate) :- true.
+\end{lstlisting}
+
+Es importante notar que el cuerpo de una regla es una conjunción lógica (operador \emph{and}). Eso quiere decir, entonces, que la cabeza de una regla es consecuencia de que se cumplan \emph{todos} los predicados del cuerpo. A veces es deseable plantear que un predicado se cumpla por más de una condición, es decir una disjunción lógica (\emph{or}). Por ejemplo, para modelar la relación ``familiar cercano'' entre dos individuos, $A$ y $B$, que se cumple si ambos son hermanos, o si son padre e hijo, es necesario plantear una disjunción. En Prolog, si bien existen otras formas de hacerlo\footnote{Así como el operador \lstinline|,/2| (la coma) denota una conjunción, el operador \lstinline|;/2| deonta una disjunción, pero no se recomienda su uso, al menos al programador Prolog principiante, ya que puede llevarlo a escribir reglas demasido complejas y no entender bien la idea de que un predicado puede definirse a partir de varias relgas.}, se estila modelar esto usando simplemente múltiples reglas:
+\begin{lstlisting}
+familiar_cercano(A, B) :- padre(A, B).
+familiar_cercano(A, B) :- padre(B, A).
+familiar_cercano(A, B) :- hermano(A, B).
+\end{lstlisting}
+
+Así, se puede averiguar quiénes son los familiares cercanos de Artemisa:
+\begin{lstlisting}
+?- familiar_cercano(artemisa, X).
+X = zeus ;
+X = apolo .
+\end{lstlisting}
+
+
+\subsection{Tipos de Datos}
+\label{sec:datos}
+
+Prolog posee un tipo de dato unificado: el \emph{término}. Existen términos simples: los átomos, variables y numerales; y términos compuestos.
+
+\begin{itemize}
+    \item Un \textbf{átomo} es simplemente un identificador. No tiene un sentido matemático como los números o las listas. Se escribe como una cadena de caracteres alfanuméricos comenzando con minúscula o entre comillas simples (estos últimos pueden contener espacios y comenzar con mayúscula). Algunos ejemplos de átomos: \lstinline|a|, \lstinline|lunes|, \lstinline|'Teoria de Lenguajes'|.
+    \item Los \textbf{numerales} pueden ser tanto enteros como de coma flotante. Los enteros son de especial interés para Prolog, ya que, al ser numerables poseen propiedades que pueden utilizarse para inferencias lógicas, como que existe \emph{siguiente} o el \emph{anterior} de todo número entero.
+    \item Una \textbf{variable} representa un valor arbitrario en una expresión, y se escribe como una cadena de caracteres alfanuméricos comenzando por mayúscula, por ejemplo \lstinline|X| o \lstinline|Dia|.
+    \item Un \textbf{término compuesto} es una expresión conformada por un átomo, llamado \emph{functor}, y una serie de términos, los \emph{argumentos} separados por coma y rodeados por paréntesis. Ejemplos de términos compuestos pueden ser \lstinline|padre(X, poseidon)| o \lstinline|pertenece(X, [1, 2, 3])|. Las listas y los strings son términos compuestos con una sintaxis especial.
+\end{itemize}
+
+\subsection{Recursividad}
+\label{sec:recursividad}
+
+Hasta ahora, usando hechos y reglas simples se pudieron definir algunos programas con capacidades de inferencia medianamente interesantes. Pero este tipo de programas no es suficiente para representar un tipo de relaciones muy interesante: las que se definen en base a sí mismas.
+
+A modo de ejemplo, se volverá a utilizar como base el programa de los dioses griegos (\ref{lst:diosesgriegos}). Esta vez se desea representar la relación ``ancestro'' . Una forma ingenua de encarar este problema sería:
+\begin{lstlisting}
+% ancestro(A, B) verifica si A es ancestro de B.
+ancestro(A, B) :- padre(A, B).
+ancestro(A, B) :- padre(A, X), padre(X, B).
+ancestro(A, B) :- padre(A, X), padre(X, Y), padre(Y, B).
+% ... ad-infinitum?
+\end{lstlisting}
+
+Es decir, plantear la relación como ``$A$ es ancestro de $B$ si $A$ es padre de $B$, o si $A$ es abuelo de $B$, o si $A$ es bisabuelo de $B$, o si \dots''. Pero, ¿hasta cuándo seguir? ¿Cuántos niveles de ascendencia son suficientes?
+
+Es evidente que planteando la relación ``ancestro'' de esta manera nunca se podría llegar a una forma general. En el intento de generalizar esta relación, surge naturalmente una definición recursiva: ``$A$ es ancestro de $B$ si $A$ es padre de un ancestro de $B$, ó si $A$ es padre de $B$ directamente''.
+\begin{lstlisting}
+ancestro(A, B) :- padre(A, B).
+ancestro(A, B) :- padre(A, X), ancestro(X, B).
+\end{lstlisting}
+
+Es importante notar que para definir la regla recursiva es necesario también otra regla no-recursiva que hace las veces de ``condición de corte'' para no caer en la recusividad infinita.
+
+Ahora \lstinline|ancestro/2| funciona bien para cualquier nivel de ascendencia:
+\begin{lstlisting}
+?- ancestro(urano, apolo).
+true .
+
+?- ancestro(X, apolo).
+X = zeus ;
+X = urano ;
+X = cronos .
+
+?- ancestro(X, urano).
+false.
+\end{lstlisting}
+
+Otra forma de definir \lstinline|ancestro/2|, que resulta funcionalmente equivalente, es:
+\begin{lstlisting}
+ancestro(A, B) :- padre(A, B).
+ancestro(A, B) :- ancestro(A, X), ancestro(X, B).
+\end{lstlisting}
+
+Esta forma de definir la relación quizá resulta chocante a primera vista al programador acostrumbrado al paradigma imperativo que ve a las reglas como procedimientos y a los cuerpos de las mismas como llamadas a otros procedimientos. Es importante recordar que \lstinline|ancestro/2| es un predicado definido a partir de dos reglas. Que la segunda regla de \lstinline|ancestro/2| ``llame'' (para ponerlo en términos imperativos, aunque poco correctos) sólo a \lstinline|ancestro/2|, esto no quiere decir que esa llamada sólo vaya a evaluar esa segunda regla para ejecutarse.
+
+Más adelante se verán ejemplos de seguimientos de programas y las definiciones recursivas, en especial el modo en que se resuelven, quedará más claro.
+
+\subsection{Listas}
+
+Las listas en Prolog pueden definirse, como en muchos lenguajes funcionales, de una forma recursiva. 
+\[
+\textit{lista} = \left\{
+  \begin{array}{l}
+  \textit{lista vacía} \\
+  \textit{un elemento seguido de una lista} \\
+  \end{array} \right.
+\]
+
+En Prolog, la lista vacía se denota \lstinline|[]|, y una lista conformada por un elemento \lstinline|H| seguido por una lista \lstinline|T| se denota \lstinline$[H|T]$. La elección de nombres \lstinline|H| y \lstinline|T| es en referencia a la convención utilizada generalmente en la programción funcional para referirse al primer elemento de una lista como la \emph{cabeza} (\emph{head}) y al resto como la \emph{cola} (\emph{tail}), y al operador \lstinline$|/2$ (símbolo ``pipe'' con aridad 2) como \emph{operador concatenación}. 
+
+Así, la lista con los elementos \lstinline|1|, \lstinline|2| y \lstinline|3| podría escribirse como \lstinline$[1|[2|[3|[]]]]$, pero por suerte existe una notación más conveniente: \lstinline|[1,2,3]|.
+
+\subsubsection*{Pattern Matching}
+
+La notación con el operador concatenación, sin embargo, es útil para hacer \emph{pattern matching} en reglas (o hechos). Por ejemplo:
+\begin{lstlisting}
+cabeza(H, [H|T]).
+\end{lstlisting}
+
+Es una hecho que dice algo trivial: la cabeza de una lista con forma \lstinline$[H|T]$ es \lstinline|H|. Sin embargo, sirve para notar algo importante: la única lista que no \emph{matchea}\footnote{``Igualar'' o ``hacer juego con'' son pésimas traducciones, así que se opta por usar la versión castellanizada.} con \lstinline$[H|T]$ es la lista vacía, hecho que se utiliza a menudo para definir condiciones de corte en predicados recursivos.
+
+En general, cuando una variable sólo se utiliza una vez y luego no se vuelve a hacer referencia a ella (i.e. el valor de la misma no es importante para definir la regla), se suele utilizar un guión bajo como \emph{placeholder} para indicar eso:
+\begin{lstlisting}
+cabeza(H, [H|_]).
+\end{lstlisting}
+
+Algunas queries para empezar a creer en el pattern matching:
+\begin{lstlisting}
+?- cabeza(X, [4,5,6]).
+X = 4.
+?- cabeza(X, []).
+false.
+?- cabeza(3, [1,2,3]).
+false.
+\end{lstlisting}
+
+Se puede combinar la notación de listas con comas y con operador concatenación para hacer patrones más complejos, por ejemplo:
+\begin{lstlisting}
+tercer_elemento(X, [_,_,X|_]).
+\end{lstlisting}
+
+El patrón \lstinline$[_,_,X|_]$ matchea con cualquier lista de tres elementos o más que tenga \lstinline|X| como tercer elemento.
+
+\subsubsection*{Reglas Recursivas}
+\label{sec:reglasrecursivas}
+
+Al ser las listas una estructura recursiva en sí mismas, es natural que suelan utilizarse reglas recursivas para definir propiedades sobre ellas. Un ejemplo títpico es el predicado \lstinline|pertenece/2|:
+\begin{lstlisting}
+% pertenece(X,L) verifica si X es un elemento de la lista L
+pertenece(X, [X|_]).
+pertenece(X, [_|T]) :- pertenece(X,T).
+\end{lstlisting}
+
+La forma de definir un predicado recursivo resulta ya familiar (sección \ref{sec:recursividad}): una hecho básico, ``$X$ pertenece a una lista que comienza con $X$; y una regla recursiva: $X$ pertenece a una lista que comienza con cualquier cosa si pertenece a su cola.
+
+Con ésta definición de \lstinline|pertenece/2| ya se pueden resolver en Prolog todas las consultas que se habían mencionado en la sección Programas Lógicos (\ref{sec:programaslogicos}).
+
+``Existe algún $X$ tal que $X$ pertenece a la lista $[4,2,5]$'':
+\begin{lstlisting}
+?- pertenece(X, [4,2,5]).
+X = 4 ;
+X = 2 ;
+X = 5.
+\end{lstlisting}
+
+``Existe algún $X$ tal que $X$ pertenece a $[3,4,5,6]$ y no pertenece a $[1,2,3,4]$'':
+\begin{lstlisting}
+?- pertenece(X, [3,4,5,6]), not(pertenece(X, [1,2,3,4])).
+X = 5 ;
+X = 6.
+\end{lstlisting}
+
+``Existen algunos $X$ e $Y$ tales que $X$ pertenece a $[1,2,3]$ e $Y$ pertenece a $[10,20]$'':
+\begin{lstlisting}
+?- pertenece(X, [1,2,3]), pertenece(Y, [10,20]).
+X = 1,
+Y = 10 ;
+X = 1,
+Y = 20 ;
+X = 2,
+Y = 10 ;
+X = 2,
+Y = 20 ;
+X = 3,
+Y = 10 ;
+X = 3,
+Y = 20.
+\end{lstlisting}
+
+``Existe algún $X$ tal que $X$ pertenece a $[1, 2]$ y $X$ pertenece a $[3, 4]$'':
+\begin{lstlisting}
+?- pertenece(X, [1,2]), pertenece(X, [3,4]).
+false.
+
+\end{lstlisting}
+
+``$3$ pertenece a $[2,3,4]$'':
+\begin{lstlisting}
+?- pertenece(3, [2,3,4]).
+true.
+\end{lstlisting}
+
+``Existe $L$ tal que $5$ pertenece a $L$'':
+\begin{lstlisting}
+?- pertenece(5, L).
+L = [5|_G288] ;
+L = [_G287, 5|_G291] ;
+L = [_G287, _G290, 5|_G294] ;
+L = [_G287, _G290, _G293, 5|_G297] ;
+L = [_G287, _G290, _G293, _G296, 5|_G300] ;
+L = [_G287, _G290, _G293, _G296, _G299, 5|_G303] .
+\end{lstlisting}
+
+Este último caso resulta interesante. Las soluciones son infinitas\footnote{Pero por suerte SWI Prolog requiere que el usuario vaya apretando \emph{n} para ir calculando cada solución en vez de intentar calcularlas todas.}, y la forma de cada solución es una lista con un 5. La primer solución es una lista de al menos un elemento, un 5; su cola puede ser una lista arbitraria y eso es lo que representa ese nombre poco-feliz. La segunda solución es una lista de al menos dos elementos, el primero de un valor arbitrario y el segundo un 5. Y así sucesivamente\dots
+
+En la sección de análisis del problema de las R Reinas (\ref{sec:analisisnreinas}) se pueden encontrar más ejemplos de algoritmos con listas.
+
+\newpage
+\section{Modelo de Ejecución de Prolog}
+% Ver página 32 y 67 del libro
+
+Hasta ahora se crearon programas y realizaron queries de forma ``intuitiva''. Para crear programas más complejos es necesario conocer el modelo de ejecución de Prolog con mayor detalle.
+
+\subsection{Unificación}
+
+El concepto de unificación en Prolog es lo que hasta ahora, informalmente, se había llamado pattern matching. Se dice, por ejemplo, que el predicado \lstinline$a(2, [2,3,4])$ \emph{unifica} con \lstinline$a(X,[X|Xs])$ usando la sustitución (\emph{binding}) \lstinline|X=2|, \lstinline|Xs=[3,4]|.
+
+\subsection{Objetivos}
+
+Un objetivo es un predicado que se quiere verificar, es decir, para el que se quiere hayar una solución. Cuando se ejecuta una query, ésta es procesada como un objetivo, pero para su resolución es probable que el motor de inferencia genere otros objetivos a probar, es por eso que se usa el término general ``objetivo'' para denotar ``lo que se quiere resolver''.
+
+\subsection{Ejemplos}
+
+La forma más sencilla de entender cómo Prolog resulve las consultas es mediante ejemplos de ejecuciones. Se estudiarán los \emph{árboles de derivación} de distintas ejecuciones y se analizará el algoritmo de \emph{backtracking}.
+
+Para ejemplificar cómo Prolog resuelve las queries, se volverá a recurrir al programa de los dioses griegos. El programa completo que se utilizará en esta sección es:
+\begin{lstlisting}
+padre(urano, cronos).
+padre(cronos, hades).
+padre(cronos, poseidon).
+padre(cronos, zeus).
+padre(zeus, apolo).
+padre(zeus, artemisa).
+
+hijo(A, B) :- padre(B, A).
+hermano(A, B) :- padre(X, A), padre(X, B), A \== B.
+
+familiar_cercano(A, B) :- padre(A, B).
+familiar_cercano(A, B) :- hijo(A, B).
+familiar_cercano(A, B) :- hermano(A, B).
+
+ancestro(A, B) :- padre(A, B).
+ancestro(A, B) :- padre(A, X), ancestro(X, B).
+\end{lstlisting}
+
+\subsubsection{Sólo hechos}
+
+Una query muy sencilla sobre el programa anterior es:
+\begin{lstlisting}
+?- padre(cronos, X).
+X = hades ;
+X = poseidon ;
+X = zeus.
+\end{lstlisting}
+
+Para resolverla, Prolog busca en el programa alguna regla (o hecho) que unifique con el objetivo \lstinline|padre(cronos,X)|. El orden en que Prolog busca las reglas no es arbitrario, es el orden en que fueron declaradas. En este caso, la primer regla que unifica con el objetivo es \lstinline|padre(cronos,hades)|, con la sustitución \lstinline|X=hades|; y al haber encontrado ya una solución que verifica la query, Prolog devuelve este resultado. 
+
+Si se le pide un siguiente resultado, Prolog deberá \emph{volver hacia atrás} en la cadena de derivación hasta el punto que haya tenido alguna regla alternativa. Ésto es lo que se conoce como \emph{backtracking}. En este caso volver atrás significa descartar la sustitución \lstinline|X=hades| volver a intentar probar el objetivo \lstinline|padre(cronos,X)| con otra regla, y así el proceso se repite hasta encontrar todas las soluciones.
+
+El árbol de derivación para este ejemplo sencillo es:
+\begin{Verbatim}[samepage=true]
+       padre(cronos,X)
+    _________|_________
+   |         |         |
+X=hades  X=poseidon  X=zeus
+ true      true       true
+\end{Verbatim}
+
+\subsubsection{Regla simple}
+
+Cuando la regla que unifica con objetivo a probar es una regla propiamente dicha (en vez de un hecho), Prolog sustituye las variables del objetivo en la regla y toma como nuevo objetivo el cuerpo de la regla. Es decir, intenta probar que el cuerpo de la regla se cumpla.
+
+Por ejemplo, para la query:
+\begin{lstlisting}
+?- hijo(X, zeus).
+X = apolo ;
+X = artemisa.
+\end{lstlisting}
+
+El árbol de derivación sería:
+\begin{Verbatim}[samepage=true]
+   hijo(X,zeus)
+        |
+   padre(zeus,X)
+    ____|____
+   |         |
+X=apolo  X=artemisa
+ true       true
+\end{Verbatim}
+
+Otro modo de ver cómo es que se resuelve esta query es observando un \emph{trace}\footnote{En SWI Prolog, ejecutando \lstinline|trace.| en la consola interactiva.} de la misma:
+\begin{Verbatim}[fontsize=\small]
+[trace]  ?- hijo(X, zeus).
+   Call: (6) hijo(_G732, zeus) ? creep
+   Call: (7)   padre(zeus, _G732) ? creep
+   Exit: (7)   padre(zeus, apolo) ? creep
+   Exit: (6) hijo(apolo, zeus) ? creep
+X = apolo ;
+   Redo: (7)   padre(zeus, _G732) ? creep
+   Exit: (7)   padre(zeus, artemisa) ? creep
+   Exit: (6) hijo(artemisa, zeus) ? creep
+X = artemisa.
+\end{Verbatim}
+
+Nota: la indentación se agregó para mayor legibilidad. El nivel de anidamiento de las llamadas está indicado por los números entre paréntesis.
+
+Las variables intermedias como \lstinline|_G732| aparecen a causa de sustituciones. En este caso \lstinline|_G732| está bindeada a \lstinline|X|, por lo cual, cuando se termina bindeando \lstinline|apolo| a la misma, \lstinline|X| termina también bindeada a \lstinline|apolo|.
+
+Las lineas del trace que comienzan con \lstinline|Call| son evaluaciones de un objetivo y las que comienzan con \lstinline|Exit| son resoluciones exitosas de un objtivo.
+
+\subsubsection{Regla compuesta y búsqueda}
+
+Cuando un objetivo no se puede probar, es decir que falla, Prolog vuelve hacia atrás en la cadena de derivación hasta el punto en que tenía alguna opción para probar con otra regla. En caso de no poder volver más hacia atrás (i.e. llegar hasta la raiz del árbol de derivación), la query no tendrá más resultados y se imprimirá \emph{false}.
+
+Por ejemplo, considérese la siguiente query:
+\begin{lstlisting}
+?- hermano(artemisa, X).
+X = apolo ;
+false.
+\end{lstlisting}
+
+El \lstinline|false| aparece porque luego de llegar a la solución \lstinline|X=apolo| todavía existían caminos sin tomar en el árbol de derivación. Cuando se le pidió seguir calculando soluciones, el intérprete evaluó estos caminos y se encontró que ninguno arrojaba una solución.
+
+El árbol de derivación tiene la forma:
+\begin{Verbatim}[samepage=true,fontsize=\small]
+            hermano(artemisa,X)
+                     |
+padre(Y,artemisa), padre(Y,X), artemisa \== X.
+                     |
+                   Y=zeus
+        padre(zeus, X), artemisa \== X.
+                     |             
+             ________|___________
+            |                    |
+         X=apolo             X=artemisa
+    artemisa \== apolo  artemisa \== artemisa
+           true                false
+\end{Verbatim}
+
+Puede observarse que para probar un objetivo compuesto, se van probando sus predicados en orden. Si alguno de estos no se puede verificar, el objetivo entero falla.
+
+\subsubsection{``Conveniencia'' de una query sobre otra}
+
+Considérese la query:
+\begin{lstlisting}
+?- hermano(X, artemisa).
+X = apolo ;
+false.
+\end{lstlisting}
+
+Si bien los resultados son idénticos a los del ejemplo anterior (pues el predicado \lstinline|hermano/2| es ``conmutativo''), el árbol de derivación resulta bastante más complejo:
+\begin{Verbatim}[samepage=true,fontsize=\tiny]
+            hermano(X,artemisa)
+                     |
+padre(Y,X), padre(Y,artemisa), X \== artemisa.
+                     |
+   __________________|_________________________________________________________________________________________________
+  |                      |                       |                       |                       |                     |
+Y=urano,X=cronos       Y=cronos,X=hades        Y=cronos,X=poseidon     Y=cronos,X=zeus         Y=zeus,X=apolo        Y=zeus,X=artemisa
+padre(urano,artemisa), padre(cronos,artemisa), padre(cronos,artemisa), padre(cronos,artemisa), padre(zeus,artemisa), padre(zeus,artemisa),
+cronos \== artemisa.   hades \== artemisa.     poseidon \== artemisa.  zeus \== artemisa.      apolo \== artemisa.   artemisa \== artemisa.
+false                  false                   false                   false                   true                  false
+\end{Verbatim}
+
+Esto ocurre porque se intenta probar el objetivo \lstinline|padre(Y,X)|, con lo cual se terminan evaluando todos los 6 hechos para \lstinline|padre/2|.
+
+\subsubsection{Reglas múltiples}
+
+Considérese la query:
+\begin{lstlisting}
+?- familiar_cercano(artemisa, X).
+X = zeus ;
+X = apolo ;
+false.
+\end{lstlisting}
+
+El árbol de derivación resulta:
+\begin{Verbatim}[samepage=true,fontsize=\small]
+            familiar_cercano(artemisa,X)
+                     |
+        _____________|___________________________
+       |                   |                     |
+padre(artemisa,X)  hijo(artemisa,X)      hermano(artemisa,X)
+     false                 |                     |
+                   padre(X,artemisa)   idem al ejemplo 3...
+                           |
+                         X=zeus
+                          true
+\end{Verbatim}
+
+Si los argumentos en la consulta se diesen vuelta
+\begin{lstlisting}
+?- familiar_cercano(X, artemisa).
+X = zeus ;
+X = apolo ;
+false.
+\end{lstlisting}
+Se obtendría un árbol de derivación distinto y se observaría el mismo comportamiento que en el ejemplo 4.
+
+\subsubsection{Recursividad: listas}
+
+Para el ejemplo de reglas recursivas, se recurrirá al ya conocido predicado \lstinline|pertenece/2| (ver sección \ref{sec:reglasrecursivas}), definido como:
+\begin{lstlisting}
+pertenece(X,[X|_]).
+pertenece(X,[_|Xs]) :- pertenece(X,Xs).
+\end{lstlisting}
+
+La consulta:
+\begin{lstlisting}
+?- pertenece(2,[1,2,3]).
+true ;
+false.
+\end{lstlisting}
+
+Se resuelve con el siguiente árbol de derivación:
+\begin{Verbatim}[samepage=true,fontsize=\small]
+        pertenece(2,[1,2,3])
+                 |
+         pertenece(2,[2,3])
+        _________|_________
+       |                   |
+      true          pertenece(2,[3])
+                           |       
+                    pertenece(2,[])
+                         false
+\end{Verbatim}
+
+Puede observarse que, por más que la query se verifique con \lstinline|pertenece(2,[2,3])| por el primer hecho, el algoritmo de backtracking sigue ejecutándose, pues \lstinline|pertenece(2,[2,3])| también unifica con el encabezado de la segunda regla \lstinline$pertenece(X,[_|Xs])$. Y es por ello el resultado de la query termina con un \lstinline|false|. Eso quiere decir que si hay varias apariciones del elemento en la lista, la query devolverá varios \lstinline|true|s;
+\begin{lstlisting}
+?- pertenece(2,[2,1,2,3,2]).
+true ;
+true ;
+true ;
+false.
+\end{lstlisting}
+
+Esto puede parecer absurdo, pero no lo és. Si para el usuario es suficiente con que la query se verifique una vez, él puede optar por detener la búsqueda de más soluciones. Éste comportamiento del algoritmo de backtracking es el que permite obtener, por ejemplo, todos los elementos que pertenecen a una lista, con la query:
+\begin{lstlisting}
+?- pertenece(X,[1,2,3]).
+X = 1 ;
+X = 2 ;
+X = 3 ;
+false.
+\end{lstlisting}
+
+El árbol de derivación, en este caso, sería:
+\begin{Verbatim}[samepage=true,fontsize=\small]
+pertenece(X,[1,2,3])
+      |
+  ____|_____      
+ |          |
+X=1   pertenece(X,[2,3])
+true    ____|_____      
+       |          |
+      X=2   pertenece(X,[3])
+      true        |
+              ____|_____      
+             |          |
+            X=3    pertenece(X,[])
+            true      false
+\end{Verbatim}
+
+\subsubsection{Operador \lstinline|!|}
+
+A veces es necesario ``cortar'' el backtracking cuando ya se llegó a una solución. Quizá porque sólo initeresa obtener una solución, o quizá porque sólo existe una y se sigue buscando se caería en un loop infinito.
+
+Por ejemplo, si se quiere que el backtracking corte al encontrar una solución que cumpla con \lstinline|pertenece/2|, se puede hacer:
+\begin{lstlisting}
+pertenece(X,[X|_]) :- !.
+pertenece(X,[_|Xs]) :- pertenece(X,Xs).
+\end{lstlisting}
+
+El operador \lstinline|!| siempre se verifica, y al evaluarse le indica al algoritmo de backtracking que debe dejar de buscar soluciones. Una query booleana, entonces, terminará ni bien se verifique:
+\begin{lstlisting}
+?- pertenece(2,[1,2,3]).
+true.
+\end{lstlisting}
+
+Pero una query existencial también terminará ni bien se encuentre una solución, con lo cual \lstinline|pertenece/2| deja de ser útil para conocer todos los elementos de una lista:
+\begin{lstlisting}
+?- pertenece(X,[1,2,3]).
+X = 1.
+\end{lstlisting}
+
+\subsubsection{Recursividad: factorial}
+
+A parte de las reglas recursivas para conjuntos finitos (como \lstinline|ancestro/2|) y la recursividad de listas, en Prolog también se pueden hacer reglas con recursividad aritmética (o cualquier combinación de esas cosas). Y qué mejor ejemplo de la recursividad artimética que el factorial?
+
+La definición matemática de la función factorial es:
+\[
+n!=\left\{
+  \begin{array}{ll}
+    1 & \text{si } n=0 \\
+    n*(n-1)! & \text{si } n>0
+  \end{array}
+\right.
+\]
+
+Su traducción a Prolog resulta bastante sencilla:
+\begin{lstlisting}
+factorial(0, 1).
+factorial(N, F) :- N > 0, N1 is N - 1, 
+                   factorial(N1, F1), F is N * F1.
+\end{lstlisting}
+
+El operador \lstinline|is| sólo bindea una variable a un valor. La primer proposición hace de condición de corte: el factorial de 0 es 1. La segunda proposición es la que se encarga de la generalización del factorial: calcula el factorial de \lstinline|N - 1| en una variable \lstinline|F1| y luego asocia \lstinline|F| (el resultado del factorial) a \lstinline|N * F1|.
+
+La correctitud de la definición puede probarse haciendo algunas queries:
+\begin{lstlisting}
+?- factorial(5,120).
+true .
+
+?- factorial(3, 4).
+false.
+
+?- factorial(-1, X).
+false.
+
+?- factorial(3, X).
+X = 6 .
+
+?- factorial(30, X).
+X = 265252859812191058636308480000000 .
+\end{lstlisting}
+
+El árbol de derivación para \lstinline|factorial(3,X)| es:
+\begin{Verbatim}[samepage=true,fontsize=\small,commandchars=\\\{\}]
+                    factorial(3, X)
+                          |
+3 > 0, N1 is 3 - 1, factorial(2, X1), X is 3 * X1
+true   N1 is 2            |           X is 3 * 2
+                          |           \fbox{X is 6}
+                          |
+2 > 0, N1 is 2 - 1, factorial(1, X2), X1 is 2 * X2
+true   N1 is 1            |           X1 is 2 * 1
+                          |           X1 is 2
+                          |
+1 > 0, N1 is 1 - 1, factorial(0, X3), X2 is 1 * X3
+true   N1 is 0            |           X2 is 1 * 1
+                          |           X2 is 1
+                          |
+                    factorial(0, 1)
+                         true
+\end{Verbatim}
+
+\newpage
+\section{Ejemplos Interesantes}
+
+A continuación se verán dos ejemplos más interesantes.
+
+\subsection{Cambio}
+
+``Cambio'' es un programa que simula las posibilidades de cambiar un billete por monedas.
+
+Se tiene un stock de 10 monedas de cada tipo, a saber: 5 centavos, 10 centavos, 25 centavos, 50 centavos, y 1 peso. Es decir, en total se cuenta con 50 monedas. Además, se puede pedir cambio de cualquiera de estos billetes: 2,5,10,20,50, o 100 pesos.
+
+El código fuente del programa es el siguiente:
+\begin{lstlisting}
+pertenece(X,[X|_]).
+pertenece(X,[_|R]) :- pertenece(X,R).
+
+stock(X) :- pertenece(X,[0,1,2,3,4,5,6,7,8,9,10]).
+billetes(X) :- pertenece(X,[2,5,10,20,50,100]).
+
+cambio(Billete,Peso,Cincuenta,Veinticinco,Diez,Cinco) :-
+	stock(Peso),
+	stock(Cincuenta),
+	stock(Veinticinco),
+	stock(Diez),
+	stock(Cinco),
+	billetes(Billete),
+	100*Billete =:= 100*Peso + 50*Cincuenta + 
+	                25*Veinticinco + 10*Diez + 5*Cinco.
+\end{lstlisting}
+
+\subsubsection{Pruebas}
+
+\begin{itemize}
+ \item \textbf{Prueba de verificación}: Se pregunta al interprete si se puede cambiar un billete de \$2 por 1 moneda de un peso, 1 de cincuenta, y 2 de veinticinco.
+
+\begin{lstlisting}
+?- cambio(2,1,1,2,0,0).
+true . 
+\end{lstlisting}
+
+Otro ejemplo, podría ser si se puede cambiar un billete de \$2 por 2 monedas de un peso y una de 5 centavos.
+\begin{lstlisting}
+?- cambio(2,2,0,0,0,1).
+false.
+\end{lstlisting}
+
+Una utilidad del programa es verificar una propuesta de cambio es correcta, o no.
+
+ \item \textbf{Prueba con variables}: Ahora, en vez de pasarle valores a la funciones, y que la misma conteste si esa condición verifica o no, es decir, si corresponde a un modelo válido o no, se le pasarán variables, para que el modelo indique \textit{para que valores} se verifica. Hay que tener en cuenta, que al pasar las variables, la solución no es necesariamente única, sino que puede haber una, varias o ninguna solución.
+
+En primer lugar, se pide cambio de cincuenta, sin restricciones:
+\begin{lstlisting}
+?- cambio(50,Peso,Cincuenta,Veinticinco,Diez,Cinco).
+false.
+\end{lstlisting}
+Devuelve \textit{false}, eso quiere decir que no encontró ninguna solución posible. Esto es bastante lógico, ya que lo limita el stock de monedas: aún devolviendo todas las monedas, no podrá llegar a juntar 50 pesos.
+
+Veamos, ahora un ejemplo que tenga soluciones. Por ejemplo, pidiendo cambio de 5 pesos:
+\begin{lstlisting}
+?- cambio(5,Peso,Cincuenta,Veinticinco,Diez,Cinco).
+Peso = 0,
+Cincuenta = 2,
+Veinticinco = 10,
+Diez = 10,
+Cinco = 10 
+\end{lstlisting}
+Acá se ve una solución posible. Sin embargo, el intérprete indica que no es la única. Apretando la tecla ``n'' se pueden ver más soluciones:
+\begin{lstlisting}
+Peso = 0,
+Cincuenta = 3,
+Veinticinco = 8,
+Diez = 10,
+Cinco = 10 ;
+
+Peso = 0,
+Cincuenta = 3,
+Veinticinco = 9,
+Diez = 8,
+Cinco = 9 ;
+
+Peso = 0,
+Cincuenta = 3,
+Veinticinco = 9,
+Diez = 9,
+Cinco = 7 ;
+
+Peso = 0,
+Cincuenta = 3,
+Veinticinco = 9,
+Diez = 10,
+Cinco = 5 
+\end{lstlisting}
+
+Y así se podría seguir un buen rato...
+
+\end{itemize}
+
+\subsubsection{Análisis del Código Fuente}
+
+A cdontinuación se va a hacer un análisis del código fuente. En primer lugar, uno se podría preguntar a que se refiere esta parte del código:
+\begin{lstlisting}
+pertenece(X,[X|_]).
+pertenece(X,[_|R]) :- pertenece(X,R).
+
+stock(X) :- pertenece(X,[0,1,2,3,4,5,6,7,8,9,10]).
+billetes(X) :- pertenece(X,[2,5,10,20,50,100]).
+\end{lstlisting}
+
+Vemos la regla \textit{stock(X)}. Esta regla se puede leer como ``stock(X) es verdadero si X pertenece a la lista formada por números del 1 al 10''. Es decir, si X es un número de 1 a 10, \textit{hay stock de X}. La misma regla se aplica para billetes, solo que en este caso X puede tomar los valores mencionados anteriormente.
+
+La función ``cambio'':
+
+\begin{lstlisting}
+cambio(Billete,Peso,Cincuenta,Veinticinco,Diez,Cinco) :-
+        stock(Peso),
+        stock(Cincuenta),
+        stock(Veinticinco),
+        stock(Diez),
+        stock(Cinco),
+        billetes(Billete),
+        100*Billete =:= 100*Peso + 50*Cincuenta + 
+                        25*Veinticinco + 10*Diez + 5*Cinco.
+\end{lstlisting}
+
+Esta función devuelve \textit{true} si se cumplen todas las condiciones enumeradas. Primero, que haya \textit{stock} de monedas, de un peso, cincuenta centavos, veinticinco, 10 , y cinco centavos. Luego, que el billete ingresado tome uno de los valores válidos, a saber, 2, 5, 10, 20, 50, o 100. Por último, la condición más importante, que la suma de las monedas sea igual, en valor monetario, al valor del billete.
+
+\subsection{N Reinas}
+
+El programa ``N Reinas'' calcula todas las soluciones al problema de las $n$ reinas\cite{nreinas}, es decir, cómo posicionar $n$ reinas en un tablero de ajedrez de $n \times n$ de forma tal que no puedan comerse en el siguiente movimiento. El código entero del programa es:
+\begin{lstlisting}
+solucion(N, Tablero) :- generar(N, Inicial), 
+        permutacion(Inicial, Tablero), tablero_valido(Tablero).
+
+generar(0, []).
+generar(N, Sec) :- N > 0, N1 is N - 1, generar(N1, Sec1), 
+        append(Sec1, [N], Sec).
+
+permutacion([], []).
+permutacion([X|Xs], Zs) :- permutacion(Xs, Ys), 
+        insertar(X, Ys, Zs).
+
+tablero_valido([]).
+tablero_valido([Col|Cols]) :- reina_no_choca(Col, Cols), 
+        tablero_valido(Cols).
+
+insertar(X, Xs, [X|Xs]).
+insertar(X, [Y|Ys], [Y|Zs]) :- insertar(X, Ys, Zs).
+
+reina_no_choca(Col, Cols) :- reina_no_choca(Col, Cols, 1).
+reina_no_choca(_,[],_).
+reina_no_choca(Col, [Otra_col|Otras_cols], Otra_fila) :-
+        Col =\= Otra_col + Otra_fila, 
+        Col =\= Otra_col - Otra_fila,
+        Otra_fila1 is Otra_fila + 1,
+        reina_no_choca(Col, Otras_cols, Otra_fila1).
+
+% Codigo para imprimir el tablero.
+imprimir_solucion(N) :- solucion(N, T), 
+        imprimir_tablero(N, T), nl.
+
+imprimir_tablero(_,[]).
+imprimir_tablero(N, [Col|Cols]) :- imprimir_fila(N, Col), nl, 
+        imprimir_tablero(N, Cols).
+imprimir_fila(0,_).
+imprimir_fila(N, Col_reina) :- N > 0, 
+        imprimir_casillero(Col_reina), 
+        N1 is N - 1, Col_reina1 is Col_reina - 1, 
+        imprimir_fila(N1, Col_reina1).
+imprimir_casillero(1) :- print('R').
+imprimir_casillero(N) :- N \== 1, print('-').
+\end{lstlisting}
+
+\subsubsection{Pruebas}
+\label{sec:pruebasnreinas}
+
+El predicado más importante del programa es \lstinline|solucion/2|, que verifica si un tablero es solución del problema de las $n$ reinas para un $n$ dado. Por ejemplo:
+\begin{lstlisting}
+?- solucion(4, [3,1,4,2]).
+true .
+\end{lstlisting}
+
+La representación del tablero es una lista de la forma $[r_1, r_2, \cdots, r_n]$ donde cada $r_i$ es el número de columna de la reina en la fila $i$-ésima. El tablero $[3,1,4,2]$, en \emph{ASCII-art} sería:
+\begin{Verbatim}[samepage=true]
+_________
+|_|_|R|_|
+|R|_|_|_|
+|_|_|_|R|
+|_|R|_|_|
+\end{Verbatim}
+
+Que es una de las 2 soluciones al problema de las n reinas para $n=4$.
+
+$[3,1,2,4]$, en cambio, no es slución.
+
+\begin{Verbatim}[samepage=true]
+_________
+|_|_|R|_|
+|R|_|_|_|
+|_|R|_|_|
+|_|_|_|R|
+\end{Verbatim}
+
+\begin{lstlisting}
+?- solucion(4, [3,1,2,4]).
+false.
+\end{lstlisting}
+
+También se pueden calcular las soluciones para un $n$ dado. $n=1$ tiene una solución trivial:
+\begin{lstlisting}
+?- solucion(1, T).
+T = [1] ;
+false.
+\end{lstlisting}
+
+$n=2$ y $n=3$ no tienen solución:
+\begin{lstlisting}
+?- solucion(2, T).
+false.
+
+?- solucion(3, T).
+false.
+\end{lstlisting}
+
+$n=4$ tine 2 soluciones.
+\begin{lstlisting}
+?- solucion(4, T).
+T = [3, 1, 4, 2] ;
+T = [2, 4, 1, 3] ;
+false.
+\end{lstlisting}
+
+Y $n=8$ tiene 92 soluciones.
+\begin{lstlisting}
+?- solucion(8, T).
+T = [5, 2, 6, 1, 7, 4, 8, 3] ;
+T = [6, 3, 5, 7, 1, 4, 2, 8] ;
+T = [6, 4, 7, 1, 3, 5, 2, 8] ;
+T = [3, 6, 2, 7, 5, 1, 8, 4] ;
+... otras 86 soluciones ...
+T = [3, 8, 4, 7, 1, 6, 2, 5] ;
+false.
+\end{lstlisting}
+
+También está el predicado \lstinline|imprimir_solucion/1|, que imprimie las soluciones para un $n$ dado en un formato más gráfico:
+\begin{lstlisting}
+?- imprimir_solucion(4).
+--R-
+R---
+---R
+-R--
+
+true ;
+-R--
+---R
+R---
+--R-
+
+true ;
+false.
+\end{lstlisting}
+
+Si bien Prolog es un lenguaje declarativo, también soporta algunas formas imperativas con \emph{side effect}, como, en este caso, imprimir algo en pantalla. El \emph{Prolog puro} es un subconjunto de Prolog que sólo soporta construcciones declarativas.
+
+
+\subsubsection{Análisis del Código Fuente}
+\label{sec:analisisnreinas}
+
+Al algoritmo utilizado se basa en el hecho de que, como como no puede haber más de una reina en la misma fila y en la misma columna, las soluciones posibles son permutaciones de la secuencia $1, 2, \cdots , n$.
+
+A continuación se explican algunos de los predicados utilizados.
+\begin{itemize}
+\item El predicado \lstinline|generar/2| genera, para un $n$ dado, la secuencia $1, 2, \cdots , n$: 
+\begin{lstlisting}
+?- generar(5, Sec).
+Sec = [1, 2, 3, 4, 5] ;
+false.
+\end{lstlisting}
+
+Está definido como:
+\begin{lstlisting}
+generar(0, []).
+generar(N, Sec) :- N > 0, N1 is N - 1, generar(N1, Sec1), 
+        append(Sec1, [N], Sec).
+\end{lstlisting}
+
+La secuencia generada para un $N > 0$ está definida como la secuencia generada para $N-1$ concatenada con la lista $[N]$ al final.
+
+El predicado \lstinline|append/3| es build-in de Prolog y se encarga de concatenar dos listas:
+\begin{lstlisting}
+?- append([a,b], [c,d,e], L).
+L = [a, b, c, d, e].
+\end{lstlisting}
+
+\item \lstinline|insertar/3| inserta un elemento en una lista en todas las posiciones posibles: 
+\begin{lstlisting}
+?- insertar(a, [b,c,d], L).
+L = [a, b, c, d] ;
+L = [b, a, c, d] ;
+L = [b, c, a, d] ;
+L = [b, c, d, a] ;
+false.
+\end{lstlisting}
+
+Se define como: 
+\begin{lstlisting}
+insertar(X, Xs, [X|Xs]).
+insertar(X, [Y|Ys], [Y|Zs]) :- insertar(X, Ys, Zs).
+\end{lstlisting}
+
+Es una definición interesante. La primer regla dice que el resultado de insertar un elemento \lstinline$X$ en una lista \lstinline$Xs$ es la lista \lstinline$[X|Xs]$, lo cual es lógico\footnote{En la programción lógica, todo esto es lógico :)}. La segunda regla, más interesante, dice que el resultado de agregar un elemento \lstinline$X$ en una lista \emph{no-vacía} de la forma \lstinline$[Y|Ys]$ es la lista \lstinline$[Y|Zs]$ donde \lstinline$Zs$ es el resultado de insertar \lstinline$X$ en \lstinline$Ys$. Es decir, que esa segunda regla es la regla recursiva y a su vez la condición de corte (porque no se cumple cuando se intenta insertar \lstinline$X$ en una lista vacía).
+
+\item \lstinline|permutacion/2| puede verificar si una lista es la permutación de otra:
+\begin{lstlisting}
+?- permutacion([a,b,c], [c,a,b]).
+true .
+\end{lstlisting}
+
+O también, y quizá más interesante, calcular todas las permutaciones de una lista:
+\begin{lstlisting}
+?- permutacion([a,b,c], P).
+P = [a, b, c] ;
+P = [b, a, c] ;
+P = [b, c, a] ;
+P = [a, c, b] ;
+P = [c, a, b] ;
+P = [c, b, a] ;
+false.
+\end{lstlisting}
+
+Su implementación es muy sencilla y está basada en \lstinline|insertar/3|:
+\begin{lstlisting}
+permutacion([], []).
+permutacion([X|Xs], Zs) :- permutacion(Xs, Ys), 
+        insertar(X, Ys, Zs).
+\end{lstlisting}
+
+Básicamente se puede leer como ``las permutaciones de una lista \lstinline$[X|Xs]$ es el resultado de insertar (en todas las posiciones posibles) \lstinline$X$ en las permutaciones de \lstinline$Xs$''.
+
+\item Las las soluciones al problema de las N Reinas se calculan con el predicado \lstinline|solucion/2|, que ya fue probado (\ref{sec:pruebasnreinas}). Su definición es:
+\begin{lstlisting}
+solucion(N, Tablero) :- generar(N, Inicial), 
+        permutacion(Inicial, Tablero), 
+        tablero_valido(Tablero).
+\end{lstlisting}
+Es decir ``las soluciones para un dado $N$ son los tableros que son permutaciones de $[1, 2, \cdots, N]$ que son tableros válidos''. Es decir, que ``la magia'' debe de estar en el predicado \lstinline$tablero_valido/2$
+
+\item \lstinline$tablero_valido/2$ verifica si una de las permutaciones de $[1, 2, \cdots, N]$ es válida, y está definido como:
+\begin{lstlisting}
+tablero_valido([]).
+tablero_valido([Col|Cols]) :- reina_no_choca(Col, Cols), 
+        tablero_valido(Cols).
+\end{lstlisting}
+
+Es decir, el tablero vacío es válido, cosa que no es muy interesante; y un tablero no vacío, como:
+\begin{Verbatim}[samepage=true]
+_________
+|_|_|R|_|
+|R|_|_|_|
+|_|_|_|R|
+|_|R|_|_|
+\end{Verbatim}
+
+\dots es válido si la reina en la primer fila no choca con niguna otra y además el tablero (no cuadrado) sin la primer fila:
+\begin{Verbatim}[samepage=true]
+_________
+|R|_|_|_|
+|_|_|_|R|
+|_|R|_|_|
+\end{Verbatim}
+\dots también es válido. Es decir que, evidentemente, la magia debe estar en \lstinline|reina_no_choca/2|
+
+\item \lstinline$reina_no_choca/2$ verifica que una reina en una columna dada no ocupe la misma diagonal que otras reinas, utilizando la propiedad de que dos elementos en las posiciones $(fila_1, col_1)$ y $(fila_2, col_2)$ están en la misma diagonal si $fila_1 + col_1 = fila_2 + col_2 \lor fila_1 - col_1 = fila_2 - col_2$.
+\[
+\begin{array}{c|c c c c}
+  + & 1 & 2 & 3 & 4 \\
+  \hline
+  1 & 2 & 3 & 4 & 5 \\
+  2 & 3 & 4 & 5 & 6 \\
+  3 & 4 & 5 & 6 & 7 \\
+  4 & 5 & 6 & 7 & 8 \\
+\end{array} \qquad \begin{array}{c|c c c c}
+  - & 1 & 2 & 3 & 4 \\
+  \hline
+  1 & 0  & 1  & 2  & 3 \\
+  2 & -1 & 0  & 1  & 2 \\
+  3 & -2 & -1 & 0  & 1 \\
+  4 & -3 & -2 & -1 & 0 \\
+\end{array}
+\]
+
+La definición de \lstinline$reina_no_choca/2$ es:
+\begin{lstlisting}
+reina_no_choca(Col, Cols) :- reina_no_choca(Col, Cols, 1).
+\end{lstlisting}
+
+Es decir que delega todo el trabajo a un predicado \lstinline$reina_no_choca/3$ (distinta aridad):
+\begin{lstlisting}
+reina_no_choca(_,[],_).
+reina_no_choca(Col, [Otra_col|Otras_cols], Otra_fila) :-
+        Col =\= Otra_col + Otra_fila, 
+        Col =\= Otra_col - Otra_fila,
+        Otra_fila1 is Otra_fila + 1,
+        reina_no_choca(Col, Otras_cols, Otra_fila1).
+\end{lstlisting}
+Este predicado verifica que una reina en una columna dada \lstinline$Col$ y la fila ``0'' \emph{no} esté en la misma diagonal que alguna otra reina en la columna \lstinline$Otra_col$ y la fila \lstinline$Otra_fila$. Si no choca con esa primera reina, pasa a la siguiente incrementando \lstinline$Otra_fila$ y llamándose recursivamente con el resto de las columnas \lstinline$Otras_cols$.
+
+Es importante notar que la numeración de las filas en este caso es a partir del 0. La reina en la columna \lstinline$Col$ está en la fila 0, por lo cual sus números de diagonales ($col + fila$ y $col - fila$) son ambos \lstinline$Col$. Cuando \lstinline|reina_no_choca/2| llama a \lstinline|reina_no_choca(Col, Cols, 1| indica que las otras reinas comienzan desde la fila 1.
+
+\end{itemize}
+
+Es decir que, a fin de cuentas, ``la magia'' no estaba en ningún predicado en particular, sino que se encuentra repartida de forma más o menos uniforme a lo largo del programa. Cada predicado se encarga de una función bastante puntual y es por eso que resultan en su mayoría muy simples (ninguno tiene más de 3 parámetros). 
+
+El código dedicado a imprimir el tablero no se analizará, pero es interesante mencionar que sólo es posible escribir código procedural en Prolog porque el lenguaje tiene un orden de evaluación estricto. Es decir, se puede saber en qué orden se ejecutarán las cosas, lo cual es básico para escribir sentencias imperativas.
+
+\newpage
+\section{Conclusiones} 
+
+Prolog resulta la elección natural para aprender programación lógica, ya que no sólo fue el precursor, sino que hoy en día sigue siendo el mayor exponente de éste campo. Además, las construcciones del lenguaje, como ya se vió a lo largo del informe, resultan sencillas y la programción interactiva muy amena.
+
+Para el programador avanzado, sin embargo, el lenguaje puede llegar a resultar limitante en algunos aspectos:
+\begin{itemize}
+  \item Al no ser un leguaje de propósito general, hay muchos campos, o casos de problemas, en donde no resulta adecuado utilizarlo. Si bien es muy subjetivo, para algunos algoritmos resulta ``más natural'' expresarlos en algún paradigma en particular. Prolog a veces ``fuerza'' al programador a adaptar un algoritmo a un paradigma para el que no resulta natural.
+  \item Si bien es un lenguaje muy expresivo para algunos problemas, comparado con los lenguajes que hacen incapié en la expresividad no es la grán cosa. Por ejemplo, el problema de las N Reinas, que se podría decir que está dentro del campo donde Prolog es ``fuerte'', se puede resolver de una forma muy directa y expresiva en sólo 6 lineas de Python\cite{nreinaspython}.
+  \item La falta de un sistema de módulos hace que sea poco escalable (no hay muchos programas ``grandes'' hechos en Prolog).
+  \item No existe un estandard bien definido del lenguaje, lo cual resulta en incompatibilidades entre las distintas implementaciones.
+\end{itemize}
+
+La manera de razonar que conlleva la programación lógica difiere enormemente de la de la programación imperativa. Entender sus fundamentos y programar pensando en lógica es una tarea sumamente enriquecedora para el programador no iniciado en este paradigma. Razonar los problemas en términos de consecuencias lógicas de los datos ayuda en algunos casos a entenderlos de forma más sencilla que hacerlo pensando en qué pasos seguir para obtener el resultado buscado. Ese mismo razonamiento puede luego ser traducido y expresado en cualquier lenguaje que se utilize, no necesariamente del paradigma lógico.
+
+\clearpage
+\begin{thebibliography}{99}
+    \bibitem{artofprolog} Leon Sterling \& Ehud Shapiro, \emph{The Art of Prolog: Advanced Programming Techniques}. The MIT Press, 2nd Edition, 1999.
+    \bibitem{vonneumann} \emph{Von Neumann Architecture}, artículo en Wikipedia: \url{http://en.wikipedia.org/wiki/Von\_Neumann\_architecture}.
+    \bibitem{wiki} \emph{Prolog}, artículo en Wikipedia: \url{http://en.wikipedia.org/wiki/Prolog}.
+    \bibitem{clausula} \emph{Clause (logic)}, artículo en Wikipedia: \url{http://en.wikipedia.org/wiki/Clause_(logic)}.
+    \bibitem{horn_clauses} \emph{Horn Clauses}, artículo en Wikipedia: \url{http://en.wikipedia.org/wiki/Horn_clauses}.
+    \bibitem{kowalski} Robert Kowalski, \emph{Predicate Logic as Programming Language}. IEEE Computer Society Press, 1986.
+    \bibitem{hist1} \emph{Historia de Prolog}, \url{http://prolog6.tripod.com/historia.htm}.
+    \bibitem{nreinas} \emph{Eight queens puzzle}, artículo en Wikipedia: \url{http://en.wikipedia.org/wiki/Eight_queens_puzzle}.
+    \bibitem{nreinaspython} Resolución del problema de las N Reinas en Python: \url{http://code.activestate.com/recipes/576647-eight-queens-six-lines/}.
+\end{thebibliography} 
+
+% ------------------------------ Fin del tp -------------------------------
+
+\end{document}
+
+%---------------------------- Fin del documento ---------------------------
+
+
+
+t
