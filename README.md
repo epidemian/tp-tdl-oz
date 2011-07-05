@@ -1,5 +1,5 @@
-# Shunting Station_ #
-**Assignment for 75.31 _Teoría de Lenguajes_ (Language Theory), Universidad de Buenos Aires,  1st semester  2011**
+# Shunting Station #
+**Assignment for 75.31 _Teoría de Lenguajes_ (Language Theory), Universidad de Buenos Aires,  1st semester of 2011**
 
 The solution is programmed in Oz, using [Mozart] [4]. The instructions for the assignment can be found on the [subject's site] [1] or [here] [5]. The idea and design of the assignment is ~~copied from~~ based on an original assignment by [Peter Van Roy] [2].
 
